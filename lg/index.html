@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML>
+		<HEAD>		
+		<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<TITLE>National Rail</TITLE>
+        
+        <META name="author" content="TV App Agency" />
+		<META name="copyright" content="TV App Agency, London, UK" />
+		
+        <SCRIPT language="javascript" type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></SCRIPT>
+        <SCRIPT language="javascript" type="text/javascript" src="js/jquery/jquery.event.drag-2.0.js"></SCRIPT>
+        <SCRIPT language="javascript" type="text/javascript" src="js/jquery/json2.js"></SCRIPT>
+        
+        
+        <!-- Platform Javascript -->
+        <!-- LG -->
+        
+        <SCRIPT type="text/javascript" language="javascript" src="js/tvapp/LG/SS.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/tvapp/LG/File.js"></SCRIPT>
+		<SCRIPT type="text/javascript" language="javascript" src="js/tvapp/LG/IME.js"></SCRIPT>
+        <style type=text/css media=screen>div.SSkeypad{background-color:#eee;width:312px;position:absolute;z-index:99;padding:3px 0 0 3px;}a.SSkeypadButton{font-size:26px;font-family:sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;letter-spacing:3px;color:#222;margin:3px 0 0 3px;padding:25px 0;}a.SSkeypadButtonX{font-size:26px;font-family:sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;letter-spacing:3px;color:#222;position:relative;margin:3px 0 0 3px;padding:25px 0;}div#redChangeButton{background-color:#E00;width:30px;height:16px;display:inline-block;text-align:center;position:absolute;top:25px;left:35px;}div#leftDeleteButton{width:30px;display:inline-block;text-align:center;position:absolute;top:20px;left:35px;font-size:20px;letter-spacing:-3px;}a.SSkeypadButtonY{font-size:26px;font-family:sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;letter-spacing:0;color:#222;position:relative;margin:3px 0 0 3px;padding:6px 0;}a#SSkeypad13{width:203px;}a.SSkeypadButton:hover,a.SSkeypadButton.hover,a.SSkeypadButtonX:hover,a.SSkeypadButtonX.hover,a.SSkeypadButtonY:hover,a.SSkeypadButtonY.hover{background-color:#dfd;}a.SSkeypadButton:focus,a.SSkeypadButton.focus,a.SSkeypadButtonX:focus,a.SSkeypadButtonX.focus,a.SSkeypadButtonY:focus,a.SSkeypadButtonY.focus{background-color:#6c6;color:#eee;}div#redChangeText,div#leftDeleteText{font-size:20px;color:#222;width:100px;display:inline-block;text-align:center;position:absolute;top:50px;left:0;letter-spacing:0;}</style>
+        <SCRIPT type="text/javascript" language="javascript" src="js/tvapp/LG/GA.js"></SCRIPT>
+        
+        <LINK rel="stylesheet" type="text/css" href="css/Datepicker.css"/>
+        <SCRIPT type="text/javascript" language="javascript" src="js/tvapp/Datepicker.js"></SCRIPT>
+		
+		<!-- Style Sheets -->
+        <LINK rel="stylesheet" type="text/css" href="css/Main.css"/>
+        <!--<LINK rel="stylesheet" type="text/css" href="css/MainLG.css"/>-->
+        
+        <!-- Javascripts -->
+        <SCRIPT type="text/javascript" language="javascript" src="js/Utils.js"></SCRIPT>
+		<SCRIPT type="text/javascript" language="javascript" src="js/Main.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/KeyHandler.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/KeyHandler.TVKeyValue.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/Autocomplete.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/NRE_API.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/RecentSaved.js"></SCRIPT>
+        
+        <SCRIPT type="text/javascript" language="javascript" src="js/Loader.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/DateFormat.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/Scroller.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/Alert.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/Debug.js"></SCRIPT>
+        
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.homePage.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.journeyPage.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.deparrPage.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.keypad.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.datepad.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.autoComplete.js"></SCRIPT>
+		<SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.header.js"></SCRIPT>
+		<SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.departurePage.js"></SCRIPT>
+		<SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.arrivalPage.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.journeyResPage.js"></SCRIPT>
+        <SCRIPT type="text/javascript" language="javascript" src="js/nav/Nav.departureDetTable.js"></SCRIPT>
+
+		
+	</HEAD>
+	<BODY id="body" onLoad="Main.onLoad();" ONKEYDOWN="SS.keyDown();" onUnload="Main.unload();" class="homePage">
+    	<div id="alertBox" class="alerBox" style="display:none;">
+        	<div class="alerBox-header">Error</div>
+            <div id="alertBoxMsg" class="alerBox-msg">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%">
+            	<tr><td align="center" valign="middle"><h1>Message</h1></td></tr>
+            </table>
+        	</div>
+            <div class="alerBox-footer">
+                <DIV class="alerBox-btn-enter"><h3>OK</h3></DIV>
+            </div>
+        </div>
+    	<!--<div id="testDatepicker" class="dp-datepicker">
+        	<div class="dp-header">Choose Date & Time</div>
+            <div class="dp-titles">
+            	<div class="dp-title">Year</div>
+                <div class="dp-title">Month</div>
+                <div class="dp-title">Day</div>
+                <div class="dp-title">Hour</div>
+                <div class="dp-title">Minute</div>
+            </div>
+            <div class="dp-arrows dp-up">
+            	<div id="dp-year-up" class="dp-arrow"></div>
+                <div id="dp-month-up" class="dp-arrow"></div>
+                <div id="dp-day-up" class="dp-arrow"></div>
+                <div id="dp-hour-up" class="dp-arrow"></div>
+                <div id="dp-minute-up" class="dp-arrow"></div>
+            </div>
+            <div class="dp-fields">
+            	<div id="dp-year" class="dp-field selected">2000</div>
+                <div id="dp-month" class="dp-field">01</div>
+                <div id="dp-day" class="dp-field">19</div>
+                <div id="dp-hour" class="dp-field">16</div>
+                <div id="dp-minute" class="dp-field">56</div>
+            </div>
+            <div class="dp-arrows dp-down">
+            	<div id="dp-year-down" class="dp-arrow"></div>
+                <div id="dp-month-down" class="dp-arrow"></div>
+                <div id="dp-day-down" class="dp-arrow"></div>
+                <div id="dp-hour-down" class="dp-arrow"></div>
+                <div id="dp-minute-down" class="dp-arrow"></div>
+            </div>
+            <div class="dp-footer">
+            	<DIV class="dp-btn-left"></DIV>
+                <DIV class="dp-btn-right"></DIV>
+                <DIV class="dp-btn-up"></DIV>
+                <DIV class="dp-btn-down"></DIV>
+            	<DIV class="dp-btn-back"><h3>Cancel</h3></DIV>
+                <DIV class="dp-btn-enter"><h3>Select</h3></DIV>
+            </div>
+        </div>-->
+    
+        <!-- Background -->
+        <DIV class="background page"></DIV>
+        <!-- Splash Screen -->
+    	<DIV id="splash" class="page"></DIV>
+        <!-- Page Header -->
+        <DIV id="header" class="header view">
+            <DIV id="menu">
+              <DIV id="menujourneyPage" class="navButton link" tabindex="1"><H2>Journey <BR>planner</H2></DIV>
+              <DIV id="menudeparrPage" class="navButton link" tabindex="0"><H2>Departures <BR>& arrivals</H2></DIV>
+            </DIV>
+        </DIV>
+        <!-- END Page Header -->
+        <DIV class="loader" style="display:none;"></DIV>
+        <!-- Page Header -->
+        <DIV class="footer">
+			<!--<DIV class="btn-A btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage"><h3>Login</h3></DIV>-->
+            <DIV class="btn-B btn-journeyResPage"><h3>Amend journey details</h3></DIV>
+			<DIV class="btn-B btn-departurePage btn-departureDetPage btn-arrivalsPage"><h3>New journey</h3></DIV>
+			<DIV class="btn-C btn-journeyResPage"><h3>Plan a new journey</h3></DIV>
+			<DIV class="btn-C btn-departurePage"><h3>Arrivals</h3></DIV>
+			<DIV class="btn-C btn-arrivalsPage"><h3>Departures</h3></DIV>
+			<!--<DIV class="btn-D btn-journeyResPage"><h3>Save journey</h3></DIV>-->
+            
+            <DIV class="btn-exit btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage btn-stationChooserPage btn-journeyResDetPage"><h3>Exit</h3></DIV>
+            <DIV class="btn-back btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage btn-stationChooserPage btn-journeyResDetPage"><h3>Back</h3></DIV>
+		</DIV>
+        <!-- END Page Header -->
+        <!-- Home Content -->
+		<DIV id="homePage" class="page">
+			<!-- Home Content -->
+            <DIV class="content">
+            	<div id="mainButtons" class="view">
+                	<DIV id="planJourney" class="link button selected" TABINDEX="0"><H1>Plan your journey</H1></DIV>
+                    <DIV id="recentStations" class="link button" TABINDEX="1"><H1>Departures & arrivals</H1></DIV>
+                </div>
+                <DIV class="mod">
+                    <DIV id="homeRecentJourneys" class="subcontent view">
+                        <DIV class="deparrHeader"><H1>Recent journeys</H1></div>
+                        <!--<DIV class="link recentButton" code="BHM" retcode="EUS">
+                            <DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                       		<DIV class="to"><H2>London Euston</H2></DIV>
+                        </DIV>
+                        <DIV class="link recentButton" code="BHM" retcode="EUS">
+                            <DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                       		<DIV class="to"><H2>London Euston</H2></DIV>
+                        </DIV>
+                        <DIV class="link recentButton" code="BHM" retcode="EUS">
+                            <DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                       		<DIV class="to"><H2>London Euston</H2></DIV>
+                        </DIV>-->         
+                    </DIV>         
+                </DIV>
+                <DIV class="mod">
+                    <DIV id="homeRecentStations" class="subcontent view">
+                        <DIV class="deparrHeader"><H1>Recent stations</H1></DIV>
+                        <!--<DIV class="link recentButton" code="EUS">
+                            <div class="station"><H2>London Euston</H2></div>
+                        </DIV>
+                        <DIV class="link recentButton" code="BHM">
+                            <div class="station"><H2>Birmingham New Street</H2></div>
+                        </DIV>
+                        <DIV class="link recentButton" code="MAN">
+                            <div class="station"><H2>Manchester Piccadilly</H2></div>
+                        </DIV>-->
+                    </DIV>        
+                </DIV>
+            </DIV>
+		</DIV>
+		<!-- END Home Content -->
+        <!-- Journey Planner Content -->
+        <DIV id="journeyPage" class="page">
+        	<DIV class="content">
+            	<DIV id="journeySearch" class="search_pane view">
+					<TABLE border="0" cellpadding="0" cellspacing="0" width="1200px" height="1px" style="margin-left:35px; margin-top:35px;">
+                    	<TR height="47px">
+                        	<TD width="67px" style="padding:0px 13px 0px 13px;" align="right">
+								<H1>From:</H1>
+							</TD>
+                            <TD width="400px">
+								<DIV id="fromStation" class="input link" TABINDEX="0" REL="Keypad" A_TYPE="station" allstations="true"><INPUT type="text" value=""/></DIV>
+							</TD>
+                            <TD rowspan="2" valign="top">
+								<H1>Date: <SPAN class="dt">11 Nov 2011</SPAN><BR/>Time: <SPAN class="tm">12:35</SPAN></H1>
+								<H2><DIV id="outDate" class="link" TABINDEX="1" REL="Datepad">Change date</DIV></H2>
+                            </TD>
+                            <TD width="287px" align="right" style="padding:0px 13px 0px 0px;">
+								<H1 style="float:left; width:200px; padding-left:27px;">Show only fastest trains</H1>
+                            	<DIV id="fastTrains" class="checkbox link" TABINDEX="2" style="float:right;" REL="Checkbox"></DIV>
+                            </TD>
+                        </TR>
+                        <TR height="47px">
+                        	<TD style="padding:0px 13px 0px 13px; height:63px;" align="right"><H1>To:</H1></TD>
+                            <TD><DIV id="toStation" class="input link" TABINDEX="3" REL="Keypad" A_TYPE="station" code="" allstations="true"><INPUT type="text" value=""/></DIV></TD>
+                            <TD rowspan="2"><DIV id="btnPlanJourney" class="goButton link" TABINDEX="4"><H1>GO</H1></DIV></TD>
+                        </TR>
+                        <TR height="47px">
+                        	<td></td>
+                        	<TD colspan="1"><H2><DIV id="addReturn" class="link" TABINDEX="5" style="height:85px;">Add return journey</DIV></H2></TD>
+                            <TD valign="top" style="display:none;">
+								<H1>Date: <SPAN class="dt">11 Nov 2011</SPAN><BR/>Time: <SPAN class="tm">12:35</SPAN></H1>
+	                            <H2><DIV id="retDate" class="link hidden" TABINDEX="6" REL="Datepad">Change date</DIV></H2>
+                            </TD>
+                        </TR>
+                    </TABLE>
+                </DIV>
+                <DIV id="recentJourneys" class="recent_pane view">
+                	<DIV class="deparrHeader"><H1>Recently viewed journeys</H1></DIV>
+                	<!--<DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>London Euston</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>
+                    <DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>
+					<DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>
+					<DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>
+					<DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>
+					<DIV class="link recentButton" code="BHM" retcode="EUS">
+                    	<DIV class="from"><H2>Birmingham New Street</H2></DIV>
+                        <DIV class="to"><H2>London Euston</H2></DIV>
+                    </DIV>-->					
+                </DIV>
+            </DIV>
+		</DIV>
+		<!-- END Journey Planner Content -->
+		<!-- Journey Result Content -->
+		<DIV id="journeyResPage" class="page">
+			<DIV class="content">
+                <DIV class="search_pane sml">
+                	<table border="0" cellpadding="0" cellspacing="0" width="1067px" height="133px" style="margin:15px 0px 0px 25px;">
+                    <tr><td align="center" valign="middle">
+                    <table border="0" cellpadding="2" cellspacing="0" width="1120px" style="margin:0px 47px 0px 47px;">
+                        <tr>
+                        	<td><h2>From</h2></td>
+                            <td><h2>To</h2></td>
+                            <td width="160px;"><h2>Date</h2></td>
+                            <td width="80px;"><h2>Time</h2></td>
+                            <td width="160px;"><h2>Return date</h2></td>
+                            <td width="80px;"><h2>Time</h2></td>
+                        </tr>
+                        <tr>
+                        	<td align="left" valign="middle"><h1 id="h_from"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_to"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_date"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_time"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_retdate"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_rettime"></h1></td>
+                        </tr>
+                    </table>
+                    </td></tr></table>
+                </DIV>
+                <div id="outHeader" class="detHeader"><h2>Outward journey</h2></div>
+                <div id="earlieroutward" class="view"><div id="earlieroutwardlink" class="link earlier outward" tabindex="0"><h2>Earlier trains</h2></div></div>
+                <DIV class="grid sml left">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>Depart</h2></LI>
+							<LI class="col2"><h2>Arrive</h2></LI>
+							<LI class="col3"><h2>CHG</h2></LI>
+							<LI class="col4"><h2>PL</h2></LI>
+							<LI class="col5"><h2>DURATION</h2></LI>
+                            <LI class="col6"><h2></h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="outTable" class="gridTable view"></DIV>
+                </DIV>
+                <div id="lateroutward" class="view"><div id="lateroutwardlink" class="link later outward" tabindex="0"><h2>Later trains</h2></div></div>
+                <div id="retHeader" class="detHeader"><h2>Return journey</h2></div>
+                
+                <div id="addReturnView" class="view"><DIV id="addReturnResPage" class="link" tabindex="0"><H2>Add return journey</H2></DIV></div>
+                
+                <div id="earlierreturn" class="view"><div id="earlierreturnlink" class="link earlier return" tabindex="0"><h2>Earlier trains</h2></div></div>
+                <DIV class="grid sml right">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>Depart</h2></LI>
+							<LI class="col2"><h2>Arrive</h2></LI>
+							<LI class="col3"><h2>CHG</h2></LI>
+							<LI class="col4"><h2>PL</h2></LI>
+							<LI class="col5"><h2>DURATION</h2></LI>
+                            <LI class="col6"><h2></h2></LI>
+						</UL>
+					</DIV>
+					<DIV id="retTable" class="gridTable view"></DIV>
+                </DIV>
+                <div id="laterreturn" class="view"><div id="laterreturnlink" class="link later return" tabindex="0"><h2>Later trains</h2></div></div>
+			</DIV>   
+		</DIV>
+		<!-- END Journey Result Content -->
+        
+        
+        <!-- Journey Result Detail Content -->
+		<DIV id="journeyResDetPage" class="page">
+        	<DIV class="content">
+            	<DIV class="search_pane sml">
+                    <table border="0" cellpadding="0" cellspacing="0" width="1067px" height="133px" style="margin:15px 0px 0px 25px;">
+                    <tr><td align="center" valign="middle">
+                    <table border="0" cellpadding="2" cellspacing="0" width="1120px" style="margin:0px 47px 0px 47px;">
+                        <tr>
+                        	<td><h2>From</h2></td>
+                            <td><h2>To</h2></td>
+                            <td width="160px;"><h2>Date</h2></td>
+                            <td width="80px;"><h2>Time</h2></td>
+                            <td width="160px;"><h2>Return date</h2></td>
+                            <td width="80px;"><h2>Time</h2></td>
+                        </tr>
+                        <tr>
+                        	<td align="left" valign="middle"><h1 id="h_from"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_to"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_date"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_time"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_retdate"></h1></td>
+                            <td align="left" valign="middle"><h1 id="h_rettime"></h1></td>
+                        </tr>
+                    </table>
+                    </td></tr></table>
+                </DIV>
+                <div id="outHeader" class="detHeader"><h2>Outward journey</h2></div>
+                <DIV class="grid resDet">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>By</h2></LI>
+							<LI class="col2"><h2>Leaving</h2></LI>
+							<LI class="col3"><h2>From</h2></LI>
+							<LI class="col4"><h2>To</h2></LI>
+                            <LI class="col5"><h2>Arriving</h2></LI>
+							<LI class="col6"><h2>Duration</h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="journeyResDetTable" class="gridTable scroolable view"></DIV>
+                    <!--<DIV id="departureDetTable" class="gridTable"></DIV>-->
+                </DIV>				
+			</DIV> 
+		</DIV>
+        <!-- END Journey Result Detail Content -->
+        <!-- Departure Arrivals Content -->
+        <DIV id="deparrPage" class="page">
+        	<DIV class="content">
+                <DIV id="deparrSearch" class="search_pane sml view">
+					<TABLE border="0" cellpadding="0" cellspacing="0" width="1200px" height="1px" style="margin-left:35px; margin-top:13px;">
+                        <TR>
+                            <TD style="padding:0px 13px 0px 13px;"><H1>Find a station</H1></TD>
+                            <TD><DIV id="searchStation" class="input link" TABINDEX="0" REL="Keypad" A_TYPE="station" allstations="false"><INPUT type="text"/></DIV></TD>
+                            <TD ><DIV id="btnLiveDepartures" class="goButtonSml link" tabindex="0"><H1>Live departures</H1></DIV></TD>
+                            <TD ><DIV id="btnLiveArrivals" class="goButtonSml link" tabindex="1"><H1>Live arrivals</H1></DIV></TD>
+                        </TR>
+                    </TABLE>
+                </DIV>
+                <DIV id="recentDepArr" class="recent_pane view">
+                	<DIV class="deparrHeader"><H1>Recent stations</H1></DIV>
+                	<!--<DIV class="link recentButton" code="EUS">
+                    	<div class="station"><H2>London Euston</H2></div>
+                    </DIV>
+                    <DIV class="link recentButton" code="BHM">
+                    	<div class="station"><H2>Birmingham New Street</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="MAN">
+                    	<div class="station"><H2>Manchester Piccadilly</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="KGX">
+                    	<div class="station"><H2>London Kings Cross</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="">
+                    	<div class="station"><H2>Heathrow Airport Terminals 1, 2 and 3</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="MCV">
+                    	<div class="station"><H2>Manchester Victoria</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="ABD">
+                    	<div class="station"><H2>Aberdeen</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="PNZ">
+                    	<div class="station"><H2>Penzance</H2></div>
+                    </DIV>
+					<DIV class="link recentButton" code="EDP">
+                    	<div class="station"><H2>Edinburgh Park</H2></div>
+                    </DIV>-->
+                </DIV>
+			</DIV>
+		</DIV>
+		<!-- END Departure Arrivals Content -->
+        <!-- Arrivals Content -->
+        <DIV id="arrivalsPage" class="page">
+        	<DIV class="content">
+                <DIV class="detHeader">
+                    <H1>London euston to tring</H1>
+                </DIV>
+                <DIV class="grid">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>Due</h2></LI>
+							<LI class="col2"><h2>Origin</h2></LI>
+							<LI class="col3"><h2>Status</h2></LI>
+							<LI class="col4"><h2>Platform</h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="arrivalTable" class="gridTable scroolable view"></DIV>
+                </DIV>
+			</DIV>        
+        </DIV>
+        <!-- END Arrivals Content -->
+        <!-- Departure Content -->
+        <DIV id="departurePage" class="page">
+        	<DIV class="content">
+                <DIV class="detHeader">
+                    <H1>London Euston to Tring</H1>
+                </DIV>
+                <DIV class="grid">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>Due</h2></LI>
+							<LI class="col2"><h2>Destination</h2></LI>
+							<LI class="col3"><h2>Status</h2></LI>
+							<LI class="col4"><h2>Platform</h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="departureTable" class="gridTable scroolable view"></DIV>
+                </DIV>				
+			</DIV>        
+        </DIV>
+        <!-- END Departure Content -->
+		<!-- Departure Detail Content -->
+		<DIV id="departureDetPage" class="page">
+        	<DIV class="content">
+                <DIV class="detHeader">
+                    <H1>London Euston to Tring</H1>
+                </DIV>
+                <DIV class="grid depDetail">
+                    <DIV class="gridheader">
+						<UL>
+							<LI class="col1"><h2>Departs</h2></LI>
+							<LI class="col2"><h2>Station</h2></LI>
+							<LI class="col3"><h2>Status</h2></LI>
+							<LI class="col4"><h2>Platform</h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="departureDetTable" class="gridTable scroolable view"></DIV>
+                </DIV>				
+			</DIV> 
+		</DIV>
+        <!-- END Departure Detail Content -->
+        <!-- Station Chooser Content -->
+		<DIV id="stationChooserPage" class="page">		
+        	<DIV class="content">
+                <DIV class="detHeader">
+                    <H1>From station</H1>
+                </DIV>
+                <div class="stationChooserTitle">
+                	<h2>Sorry we couldn't find "<strong id="disambiguationCode" style="text-transform:uppercase;"></strong>".<br/> Did you mean?</h2>
+                </div>
+                <DIV class="grid stChDetail">
+                    <DIV class="gridheader">
+						<UL>
+                            <LI class="col1"><h2>Station</h2></LI>
+						</UL>
+					</DIV>
+                    <DIV id="stChTable" class="gridTable scroolable view"></DIV>
+                </DIV>				
+			</DIV>
+		</DIV>
+		<!-- END Station Chooser Content -->
+	</BODY>
+</HTML>

@@ -1,0 +1,133 @@
+
+.dp-datepicker{
+	position:absolute;
+	top:267px;
+	left:267px;	
+	width:680px;
+	height:280px;
+	z-index:98;
+	background:#f00;
+	background:url(../img/datepicker/BackgroundFull.png) center center no-repeat;
+}
+.dp-header{
+	position:absolute;
+	left:13px;
+	top:7px;
+	height:37px;
+	width:651px;
+	/*background:url(../img/datepicker/header.png) repeat;*/
+	margin:0px 1px 0px 1px;
+	text-align:center;
+	
+	font-size:27px;
+	font-weight:bold;
+	line-height:37px;
+
+	color:#ffcc00;
+	text-shadow:0px 1px 1px #000;
+	
+}
+.dp-footer{
+	position:absolute;
+	left:13px;
+	bottom:7px;
+	height:37px;
+	width:651px;
+	/*background:url(../img/datepicker/footer_bg.png) top repeat-x;*/
+	margin:0px 1px 0px 1px;
+	padding:0px;
+}
+.dp-footer h3{
+	font-size:21px;
+	font-weight:bold;
+	line-height:24px;
+
+	color:#fff;
+	text-shadow:0px 1px 1px #000;
+}
+.dp-footer .dp-btn-left, .dp-footer .dp-btn-right, .dp-footer .dp-btn-up, .dp-footer .dp-btn-down, .dp-footer .dp-btn-back, .dp-footer .dp-btn-enter {
+	float:left;
+	padding:7px 0px 0px 0px;
+	margin:0px 0px 0px 7px;
+	height:29px;
+	min-width:29px;
+}
+.dp-footer .dp-btn-left{ margin:0px 0px 0px 37px; background:url(../img/datepicker/ArrowLeft.png) left center no-repeat; }
+.dp-footer .dp-btn-right{ background:url(../img/datepicker/ArrowRight.png) left center no-repeat; }
+.dp-footer .dp-btn-up{ background:url(../img/datepicker/ArrowUp.png) left center no-repeat; }
+.dp-footer .dp-btn-down{ background:url(../img/datepicker/ArrowDown.png) left center no-repeat; }
+.dp-footer .dp-btn-back, .dp-footer .dp-btn-enter {
+	float:right;
+	padding:7px 37px 0px 0px;
+	margin:0px 7px 0px 0px;
+}
+.dp-footer .dp-btn-back { margin:0px 37px 0px 0px; background:url(../img/datepicker/Back.png) right center no-repeat; }
+.dp-footer .dp-btn-enter { padding:7px 48px 0px 0px; background:url(../img/datepicker/Enter.png) right center no-repeat; }
+.dp-titles{
+	position:absolute;
+	left:13px;
+	top:53px;
+	height:27px;
+	width:610px;
+	padding:0px 27px 0px 27px;
+}
+.dp-title{
+	margin:0px 7px 0px 7px;
+	width:107px;
+	font-size:27px;
+	font-weight:bold;
+	line-height:61px;
+	display:inline-block;
+	color:#fff;
+	height:61px;
+	text-align:center;
+	float:left;
+	text-shadow:0px 1px 1px #000;
+}
+.dp-fields{
+	position:absolute;
+	left:13px;
+	top:124px;
+	height:64px;
+	width:610px;
+	padding:0px 27px 0px 27px;
+}
+.dp-field{
+	margin:0px 7px 0px 7px;
+	width:107px;
+	font-size:29px;
+	font-weight:bold;
+	line-height:61px;
+	display:inline-block;
+	color:#999;
+	height:61px;
+	text-align:center;
+	float:left;
+	background:url(../img/datepicker/Field.png) center center no-repeat;
+}
+.dp-field.selected{
+	background:url(../img/datepicker/FieldSelected.png) center center no-repeat;
+}
+.dp-arrows{
+	position:absolute;
+	left:13px;
+	top:107px;
+	height:11px;
+	width:610px;
+	padding:0px 27px 0px 27px;
+	cursor:pointer;
+}
+.dp-arrows.dp-down{
+	top:188px;
+}
+.dp-arrow{
+	margin:0px 7px 0px 7px;
+	width:107px;
+	height:11px;
+	display:inline-block;
+	float:left;
+	background:url(../img/datepicker/FieldArrowUp.png) bottom center no-repeat;
+}
+.dp-arrows.dp-down .dp-arrow{
+	background:url(../img/datepicker/FieldArrowDown.png) bottom center no-repeat;
+}
