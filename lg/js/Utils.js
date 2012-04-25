@@ -4,79 +4,164 @@ var Utils = {
 	dayNames : new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat"),
 	monthNames : [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 }
+var charTimer = null;
 var onCharacter = function(){
-	$(Nav.links[Nav.selected]).trigger('change');
-}
+	SS.log('onCharacter');
+	//$(Nav.links[Nav.selected]).trigger('change');
+	if(SS.device == 'philips')
+	{
+		clearTimeout(charTimer);
+		charTimer = setTimeout(function(){ $(Nav.links[Nav.selected]).trigger('change'); },100);
+	}
+};
+var onFinishedEditing = function(){
+	SS.log('onFinishedEditing::' + KeyHandler.hasView + '>>' + KeyHandler.hasSubView);
+};
+var onExitEditing = function(){
+	SS.log('onExitEditing');
+};
 Utils.Keypad = function(show,ready,change)
 {
-	
+	SS.log('Utils.Keypad>>' + show + '>>')
 	var field = $(Nav.links[Nav.selected]);
 	var fieldId = field.attr('id');
 	var fieldInput = field.children('input:first');
-	
+	var inputClick = fieldInput.prev('div.inputClick');
 	if(show)
 	{
-		//alert('keypad show')
+		SS.log('keypad show')
 		field.addClass('clear');
-		fieldInput.val('');
-		field.attr('code','');
+		if(SS.device != 'samsung') fieldInput.removeAttr('disabled').show();
+		if(SS.device != 'samsung') inputClick.hide();
+		if(SS.device != 'philips')
+		{
+			fieldInput.val('');
+			inputClick.html('');
+			field.attr('code','');
+		}
 		//already open
 		if(field.data('opened')) return;
-		
-		//Show
-		//if(!this.Keypads[fieldId]) {
-			fieldInput.attr('id',fieldId+'_input');
-			//Add hidden field if don't have one (for focus redirect)
-			//if($('#hiddenInput').length < 1) $('body').append('<input id="hiddenInput" style="border:none; width:1px; height:1px; position:absolute; bottom:0px; left:-1px; z-index:0;"/>');
 
-			this.Keypads[fieldId] = $(fieldId)
-			IME.newIME(fieldId+'_input',{xPosition:(640*(SS.device == 'samsung' ? 1 : 1.33)),yPosition:(70*(SS.device == 'samsung' ? 1 : 1.33)),clear:true,onReady:ready,lang:'en'});//new IMEShell(fieldId+'_input', ready, 'en');
-			
-			if(SS.device == 'lg')
-			{
-				if(ready) { ready(); }
-			}
-			
-//			this.Keypads[fieldId].IME.readyGo
-			//this.Keypads[fieldId] = new IMEShell(fieldId+'_input', ready, 'en');
-			//this.Keypads[fieldId].setKeypadPos(600,70);
-		//}
-		field.data({'opened':true});
+		//Show
+		fieldInput.attr('id',fieldId+'_input');
+
+		this.Keypads[fieldId] = $(fieldId);
+		
+		if(SS.device != 'samsung')
+		{
+			IME.showIME(fieldId+'_input',{xPosition:(640*(SS.device == 'samsung' ? 1 : 1.33)),yPosition:(70*(SS.device == 'samsung' ? 1 : 1.33)),clear:true,onReady:ready,lang:'en'});
+		}
+		if(SS.device == 'lg' || SS.device == 'googletv')
+		{
+			if(ready) { ready(); }
+		}
+		field.data({'opened':true}).addClass('clear');
 		
 		KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView,'keypad');
+		onCharacter = change;
 		
-		field.unbind('change').bind('change',function(){
-			if(change) change();
-		});
+		if(SS.device == 'googletv' || SS.device == 'philips'|| SS.device == 'lg')
+		{	
+			$(fieldInput,field).unbind('keyup').bind('keyup',function(){
+				if($(this).attr('data-prevval') != $(this).val())
+				{
+					$(this).attr('data-prevval',$(this).val());
+					SS.log('field change');
+					if(change) change();
+				}
+			});
+		}
 		
-		
-		fieldInput.focus();
+		if(SS.device == 'philips')
+		{
+			KeyHandler.blocked = true;
+			setTimeout(function(){
+			
+				$(fieldInput).unbind('blur').bind('blur',function(e){
+					if(field.hasClass('selected') && KeyHandler.hasSubView != 'autoComplete')
+					{
+						e.preventDefault();
+						e.stopPropagation();
+						
+						
+						SS.log('Tryies to escape >> ' + KeyHandler.hasSubView);
+						Autocomplete.hide($(Nav.links[Nav.selected]));
+						Utils.Keypad(false);
+						$('#autoComplete').hide();
+						Nav.iterateLinks('next');
+						
+						KeyHandler.blocked = true;
+						setTimeout(function(){KeyHandler.blocked = false;},300);
+						
+						
+						return false;
+					}
+				});
+				SS.log('Field Focus!!!')
+				fieldInput.focus();
+				KeyHandler.blocked = false;
+			},300);
+		}
+		if(SS.device == 'lg')
+		{
+			alert('FOCUS')
+			fieldInput.focus();
+		}
+		if(SS.device == 'samsung')
+		{
+			IME.showIME(fieldId+'_input',{xPosition:(640*(SS.device == 'samsung' ? 1 : 1.33)),yPosition:(70*(SS.device == 'samsung' ? 1 : 1.33)),clear:true,onReady:ready,lang:'en'});
+		}
+		SS.log('keypad shows')
 	}
 	else
 	{
-		//alert('keypad hide')
+		//SS.log('keypad hide')
 		//Close
 		if(!field.data('opened')) return;
 		field.data('opened',false);
+		inputClick.html(fieldInput.val());
+		$(fieldInput,field).unbind('keyup');
+		if(SS.device == 'googletv')
+		{
+			fieldInput.blur();
+			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
+			if(SS.device != 'samsung') inputClick.show();
+		}
 		//$('#hiddenInput').focus();
 		if(SS.device == 'lg')
 		{
 			IME.finEditing(true);
+			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
+			if(SS.device != 'samsung') inputClick.show();
+			fieldInput.blur();
+		}
+		else if(SS.device == 'philips')
+		{
+			
+			$(fieldInput).unbind('blur')
+			fieldInput.blur();
+			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
+			if(SS.device != 'samsung') inputClick.show();
+			IME.onEnter();
 		}
 		else
 		{
-			IME.exitIME();
+			//IME.exitIME();
+			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled')
+			if(SS.device != 'samsung') fieldInput.hide();
+			if(SS.device != 'samsung') inputClick.show();
 		}
-			
+		
+
 		this.Keypads[fieldId] = false;
 		if(fieldInput.val() == '')
 		{
 			field.removeClass('clear');
-			field.attr('code','');
+			field.attr('data-code','');
 		}
-		Autocomplete.hide($(Nav.links[Nav.selected]),true);
+		//Autocomplete.hide($(Nav.links[Nav.selected]),true);
 		//KeyHandler.viewBack();
-		KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView,null)
+		KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null)
 	}
 }
 Utils.interval15min = function(date)
@@ -103,16 +188,16 @@ Utils.DatePad = function(show,date,onclose,minDate)
 		if(!date) 
 		{
 			date = Utils.interval15min(field.data('date'));
-			//alert('field' + field.data('date'))
+			//SS.log('field' + field.data('date'))
 		}
 		if(!date) 
 		{
 			date = Utils.interval15min(new Date());
-			//alert('NEW DATE')
+			//SS.log('NEW DATE')
 		}
 
 		//already open
-		//alert('IsOpen??' + this.Datepads[fieldId].visible)
+		//SS.log('IsOpen??' + this.Datepads[fieldId].visible)
 		//if(field.data('opened')) return;
 		
 		
@@ -124,7 +209,7 @@ Utils.DatePad = function(show,date,onclose,minDate)
 			
 			//;
 			//$('body').append(this.Datepads[fieldId]);
-			//alert('minD::'+(minDate ? minDate : new Date()))
+			//SS.log('minD::'+(minDate ? minDate : new Date()))
 			this.Datepads[fieldId] = new Datepicker(
 				fieldId,
 				{
@@ -138,8 +223,9 @@ Utils.DatePad = function(show,date,onclose,minDate)
 					{
 						field.data('date',Utils.Datepads[fieldId].date);						
 						if(onclose) onclose(date);
-						$('#hiddenInput').focus();
-						KeyHandler.viewBack();
+						//$('#hiddenInput').focus();
+						//KeyHandler.viewBack();
+						KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null);
 					} 
 				}
 			);
@@ -154,7 +240,7 @@ Utils.DatePad = function(show,date,onclose,minDate)
 		
 		KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, 'datepad');	
 		
-		field.focus();
+		//field.focus();
 		//this.Datepads[fieldId].date = date;//data('date',date)
 		this.Datepads[fieldId].show(Utils.interval15min(Nav.fixDate(date)), (minDate ? Utils.interval15min( Nav.fixDate(minDate) ) : new Date()));
 		//this.Datepads[fieldId].sfDatepicker('show').css({'z-index':99,'position':'absolute','top':'60px','left':'170px'});
@@ -162,19 +248,20 @@ Utils.DatePad = function(show,date,onclose,minDate)
 	}
 	else
 	{		
-		alert('OnClose IsOpen??' + field.data('opened'))
-		//alert(this.Datepads[fieldId].data('date'));
+		//SS.log('OnClose IsOpen??' + field.data('opened'))
+		//SS.log(this.Datepads[fieldId].data('date'));
 		//Close
 		//if(!field.data('opened')) return;
 		//field.data('opened',false);
 		if(this.Datepads[fieldId].visible)
 		{
-			//alert('OnClose IsOpen??' + field.data('opened'))
+			//SS.log('OnClose IsOpen??' + field.data('opened'))
 			//this.Datepads[fieldId].hide();
 	//		this.Datepads[fieldId].sfDatepicker('hide');
-			$('#hiddenInput').focus();
+			//$('#hiddenInput').focus();
 			
-			KeyHandler.viewBack();
+			//KeyHandler.viewBack();
+			KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null);
 		}
 	}
 }
@@ -222,7 +309,7 @@ Utils.GetTimeLate = function(date1, date2) {
 	else if (date2 == "Delayed")
 		return true;
 		
-	//alert('date1:' + date1 + ' >> date2:'+date2)
+	//SS.log('date1:' + date1 + ' >> date2:'+date2)
 	dt1 = Utils.stringToDate('2008-09-19 ' + date1 + ':00');
 	dt2 = Utils.stringToDate('2008-09-19 ' + date2 + ':00');
 
@@ -309,7 +396,15 @@ Utils.querystring = function(key) {
 	while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
 	return r;
 }
-
+Utils.preloadImages = function(images) {
+	var img = new Image()
+	$(img).bind('load', function() {
+		if(images[0]) {
+			this.src = images.shift();
+			//SS.log(this.src);
+		}
+	}).trigger('load');
+};
 String.prototype.removeBreaks = function() {
 	return this.replace(/(\r\n|\n|\r)/gm,"");
 }

@@ -6,7 +6,7 @@ var Autocomplete = {
 
 Autocomplete.init = function(field)
 {
-	if(!field.attr('a_type')) return;  //if autocomplete
+	//if(!field.attr('a_type')) return;  //if autocomplete
 	var fieldID = field.attr('id');
 	var autocomplete = $('#autoComplete');
 	
@@ -21,43 +21,52 @@ Autocomplete.init = function(field)
 	{
 		case 'fromStation':
 			//FROM 11625x103
-			//alert('Device ::: '+SS.device)
+			//SS.log('Device ::: '+SS.device)
 			if(SS.device == 'samsung')
 			{
-				//alert('sams');
-				autocomplete.css({'top':116+25,'left':103});
+				autocomplete.css({'top':138+25,'left':103});
+			}
+			else if(SS.device == 'philips')
+			{
+				autocomplete.css({'top':190+25,'left':150});
 			}
 			else
 			{
-				//alert('here')
-				autocomplete.css({'top':146+25,'left':143});
+				autocomplete.css({'top':192+25,'left':157});
 			}
 			break;
 		case 'toStation':
 			//TO 18025x103
 			if(SS.device == 'samsung')
 			{
-				//alert('sams');
-				autocomplete.css({'top':180+25,'left':103});
+				autocomplete.css({'top':184+25,'left':103});
+			}
+			else if(SS.device == 'philips')
+			{
+				autocomplete.css({'top':252+25,'left':150});
 			}
 			else
 			{
-				autocomplete.css({'top':300+25,'left':143});
+				autocomplete.css({'top':254+25,'left':157});
 			}
 			break;
 		case 'searchStation':
 			//Search 13625x182
 			if(SS.device == 'samsung')
 			{
-				autocomplete.css({'top':136+25,'left':182});
+				autocomplete.css({'top':148+25,'left':183});
+			}
+			else if(SS.device == 'philips')
+			{
+				autocomplete.css({'top':204+25,'left':267});
 			}
 			else
 			{
-				autocomplete.css({'top':136+25,'left':182});
+				autocomplete.css({'top':206+25,'left':275});
 			}
 			break;
 	}
-	//alert('Position::' + pos.top+25 + 'x' + pos.left);
+	//SS.log('Position::' + pos.top+25 + 'x' + pos.left);
 	//autocomplete.css({'top':pos.top+25,'left':pos.left});
 	
 	field.unbind('blur.autocomplete').bind('blur.autocomplete',function(){
@@ -66,7 +75,7 @@ Autocomplete.init = function(field)
 }
 Autocomplete.hide = function(field,notGoBack)
 {
-	if(!field.attr('a_type')) return;  //if autocomplete
+	//if(!field.attr('a_type')) return;  //if autocomplete
 	if(this.xhr && this.xhr.readyState != 4)
 	{
 		this.xhr.abort();
@@ -74,17 +83,26 @@ Autocomplete.hide = function(field,notGoBack)
 	var fieldID = field.attr('id');
 	var autocomplete = $('#autoComplete');
 	$('#toStation').show();
-	autocomplete.hide();
+	autocomplete.hide().html('');
 	if(!notGoBack)
 	{
-		KeyHandler.viewBack();
+		//KeyHandler.viewBack();
 	}
 }
 Autocomplete.change = function(field)
 {	
-	if(KeyHandler.hasSubView == 'autoComplete' || KeyHandler.hasSubView != 'keypad') return;
+	if(KeyHandler.hasSubView == 'autoComplete' || KeyHandler.hasSubView != 'keypad')
+	{
+		if(SS.device != 'samsung')
+		{
+			KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView,'keypad');
+		}
+		//return;
+	}
 	
-	if(!field.attr('a_type')) return; //if autocomplete
+	SS.log('Autocomplete.change')
+	//if(!field.attr('a_type')) return; //if autocomplete
+	
 	//TODO: Need different check
 	//if(!field.is(":focus")) { Autocomplete.hide(field); return; } //Lost focus already 
 
@@ -94,12 +112,12 @@ Autocomplete.change = function(field)
 	
 	var fieldInput = field.children('input:first');
 	
-	switch(field.attr('a_type'))
-	{
-		case 'station':
+	//switch(field.attr('a_type'))
+	//{
+	//	case 'station':
 			url = 'http://ojp.nationalrail.co.uk/find/stations/';
-			break;
-	}
+	//		break;
+	//}
 	if (field.data('tempText') != fieldInput.val()) {
 		field.data('tempText',fieldInput.val());
 		if (fieldInput.val().length >= 2) {
@@ -127,12 +145,12 @@ Autocomplete.change = function(field)
 				
 				if (textA < textB) //sort string ascending
 				{
-					//alert(textA + '<' + textB);
+					//SS.log(textA + '<' + textB);
 					return -1; 
 				}
 				if (textA > textB)
 				{
-					//alert(textA + '>' + textB);
+					//SS.log(textA + '>' + textB);
 					return 1;
 				}
 				else return 0 //default return value (no sorting)
@@ -166,7 +184,7 @@ Autocomplete.change = function(field)
 							}
 							count++;
 							if(count<Autocomplete.sugestLimit){
-								items.push('<div id="autocomplete_'+count+'_'+ code + '" class="sugestItem link '+(key%2==0 ? 'odd' : 'even' )+'" code="' + code + '" text="'+val[1]+'" tabindex="'+count+'"><h2>' + val[1] +' ['+val[0]+']'+ '</h2></div>');
+								items.push('<div id="autocomplete_'+count+'_'+ code + '" class="sugestItem link '+(key%2==0 ? 'odd' : 'even' )+'" data-code="' + code + '" text="'+val[1]+'" data-tabindex="'+count+'"><h2>' + val[1] +' ['+val[0]+']'+ '</h2></div>');
 							}
 							else
 							{
@@ -191,6 +209,10 @@ Autocomplete.change = function(field)
 							{
 								autocomplete.css({'top':138+25,'left':103});
 							}
+							else if(SS.device == 'philips')
+							{
+								autocomplete.css({'top':190+25,'left':150});
+							}
 							else
 							{
 								autocomplete.css({'top':192+25,'left':157});
@@ -202,6 +224,10 @@ Autocomplete.change = function(field)
 							if(SS.device == 'samsung')
 							{
 								autocomplete.css({'top':184+25,'left':103});
+							}
+							else if(SS.device == 'philips')
+							{
+								autocomplete.css({'top':252+25,'left':150});
 							}
 							else
 							{
@@ -215,6 +241,10 @@ Autocomplete.change = function(field)
 							{
 								autocomplete.css({'top':148+25,'left':183});
 							}
+							else if(SS.device == 'philips')
+							{
+								autocomplete.css({'top':204+25,'left':267});
+							}
 							else
 							{
 								autocomplete.css({'top':206+25,'left':275});
@@ -225,7 +255,12 @@ Autocomplete.change = function(field)
 					KeyHandler.initClicksHover($('#autoComplete'));
 				}
 			});
-		} 
+		}
+		
+		if(fieldInput.val() == '')
+		{
+			Autocomplete.hide(field);
+		}
 	}
 }
 

@@ -1,22 +1,22 @@
-Nav.homeRecentJourneys = function(keycode)
+Nav.homeRecentJourneys = function(key)
 {
-	switch(keycode)
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('prev'))
 			{
 				//Go Back
 				KeyHandler.changeView('homePage','mainButtons');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			KeyHandler.changeView('homePage','mainButtons');
-			Nav.homePage(KeyHandler.tvKey.KEY_RIGHT);
+			Nav.homePage(39);
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:	
+		case 13:	
 			var selLink = $(this.links[this.selected]);
 			Nav.goRecentJourney(selLink);
 			break;
@@ -24,25 +24,25 @@ Nav.homeRecentJourneys = function(keycode)
 			break;
 	}
 }
-Nav.homeRecentStations = function(keycode)
+Nav.homeRecentStations = function(key)
 {
-	switch(keycode)
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('prev'))
 			{
 				//Go Back
 				KeyHandler.changeView('homePage','mainButtons');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			KeyHandler.changeView('homePage','mainButtons');
-			Nav.homePage(KeyHandler.tvKey.KEY_LEFT);
+			Nav.homePage(37);
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:	
+		case 13:	
 			var selLink = $(this.links[this.selected]);
 			Nav.goRecentStation(selLink);
 			break;
@@ -50,34 +50,45 @@ Nav.homeRecentStations = function(keycode)
 			break;
 	}
 }	
-Nav.homePage = function(keycode)
+Nav.homePage = function(key)
 {
-	Nav.generic(keycode);
-	switch(keycode)
+	Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
+			SS.log('40')
 			var selLink = $(this.links[this.selected]);
 			switch(selLink.attr('id'))
 			{
 				case 'planJourney':
+					var links = $('#homeRecentJourneys').find('.link');
+					SS.log('>>>> homeRecentJourneys Links::: ' + links.length)
+					links.each(function(){
+						$(this).removeClass('selected lastselected active');
+					});
 					KeyHandler.changeView('homePage','homeRecentJourneys');
 					break;
 				case 'recentStations':
+					var links = $('#homeRecentStations').find('.link');
+					SS.log('>>>> homeRecentStations Links::: ' + links.length)
+					links.each(function(){
+						$(this).removeClass('selected lastselected active');
+					});
 					KeyHandler.changeView('homePage','homeRecentStations');
 					break;
 				default:
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			Nav.iterateLinks('prev');	
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			if($('#planJourney').hasClass('selected'))
 			{
 				Nav.resetJourneySearch();

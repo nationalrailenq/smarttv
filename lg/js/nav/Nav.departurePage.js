@@ -1,29 +1,30 @@
-Nav.departurePage = function(keycode)
+Nav.departurePage = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	//Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('prev'))
 			{
 				KeyHandler.changeView('departurePage','header');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			Nav.searchDeparturesDetail();
 			break;
-		case KeyHandler.tvKey.KEY_GREEN:
-			$('#searchStation').attr('code','').find('input:first').val('').addClass('selected');
+		case 404:
+			$('#searchStation').removeClass('clear').attr('data-code','').find('input:first').val('').addClass('selected');
+			$('div.inputClick',$('#searchStation')).html('');
 			KeyHandler.changeView('deparrPage','deparrSearch');
 			break;
-		case KeyHandler.tvKey.KEY_YELLOW:
+		case 405:
 			Nav.searchArrivals();
 			break;
 		default:
@@ -33,16 +34,16 @@ Nav.departurePage = function(keycode)
 
 Nav.searchDeparturesDetail = function()
 {
-	//alert('search departures details:::' + $(this.links[this.selected]).attr('id') + '>>>' + $(this.links[this.selected]).attr('serviceID'));
+	//SS.log('search departures details:::' + $(this.links[this.selected]).attr('id') + '>>>' + $(this.links[this.selected]).attr('serviceID'));
 	
 	NRE.GetServiceDetails($(this.links[this.selected]).attr('serviceID'),function(xmlDoc){
-		//alert('got service det')
+		//SS.log('got service det')
 		var list = Loader.ServiceDetails(xmlDoc);
 		if($('ul.error',$('<div>'+list+'</div>')).length <= 0)
 		{
-			//alert(list)
+			//SS.log(list)
 			$('#departureDetTable').html(list);
-			//alert('change view');
+			//SS.log('change view');
 			KeyHandler.changeView('departureDetPage','departureDetTable');
 			//Scroller.init('departureDetTable');
 			

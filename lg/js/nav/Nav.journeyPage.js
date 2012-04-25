@@ -1,24 +1,25 @@
-Nav.recentJourneys = function(keycode)
+Nav.recentJourneys = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	//Nav.generic(key);
+        
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_LEFT:		
+		case 37:		
 			Nav.iterateLinks('prev');
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('up',false,3))
 			{
 				KeyHandler.changeView('journeyPage','journeySearch');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('down',false,3);
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			var selLink = $(this.links[this.selected]);
 			Nav.goRecentJourney(selLink);
 			break;
@@ -26,12 +27,16 @@ Nav.recentJourneys = function(keycode)
 			break;
 	}
 }
-Nav.journeyPage = function(keycode)
+Nav.journeyPage = function(key)
 {
-	Nav.generic(keycode);
-	switch(keycode)
+	Nav.generic(key);
+        if(Nav.tools == 1)
+        {
+            return;
+        };
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			var selLink = $(Nav.links[Nav.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -60,7 +65,7 @@ Nav.journeyPage = function(keycode)
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			var selLink = $(Nav.links[Nav.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -91,7 +96,7 @@ Nav.journeyPage = function(keycode)
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			var selLink = $(Nav.links[Nav.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -114,7 +119,7 @@ Nav.journeyPage = function(keycode)
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			var selLink = $(Nav.links[Nav.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -144,11 +149,11 @@ Nav.journeyPage = function(keycode)
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			var selLink = $(this.links[this.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -157,6 +162,12 @@ Nav.journeyPage = function(keycode)
 					break;
 				case 'btnPlanJourney':
 					Nav.planJourney(selLink);
+					break;
+                                case 'fromStation':
+					$('#fromStation').attr('data-code','');
+					break;
+				case 'toStation':
+					$('#toStation').attr('data-code')
 					break;
 				default:
 					break;
@@ -169,24 +180,26 @@ Nav.journeyPage = function(keycode)
 
 Nav.recentStationsAdd = function()
 {
-	$('#homeRecentStations').html('<DIV class="deparrHeader"><H1>Recent stations</H1></DIV>' + RecentSaved.get('deparrSearch',3,'home'));
-	$('#recentDepArr').html('<DIV class="deparrHeader"><H1>Recent stations</H1></DIV>' + RecentSaved.get('deparrSearch',9,'deparr'));	
+	$('#homeRecentStations').html('<div class="deparrHeader"><h1>Recent stations</h1></div>' + RecentSaved.get('deparrSearch',3,'home'));
+	$('#recentDepArr').html('<div class="deparrHeader"><h1>Recent stations</h1></div>' + RecentSaved.get('deparrSearch',9,'deparr'));	
 }
 Nav.recentJourneysAdd = function()
 {
-	$('#homeRecentJourneys').html('<DIV class="deparrHeader"><H1>Recently viewed journeys</H1></DIV>' + RecentSaved.get('journeySearch',3,'home'));
-	$('#recentJourneys').html('<DIV class="deparrHeader"><H1>Recently viewed journeys</H1></DIV>' + RecentSaved.get('journeySearch',6,'deparr'));	
+	$('#homeRecentJourneys').html('<div class="deparrHeader"><h1>Recently viewed journeys</h1></div>' + RecentSaved.get('journeySearch',3,'home'));
+	$('#recentJourneys').html('<div class="deparrHeader"><h1>Recently viewed journeys</h1></div>' + RecentSaved.get('journeySearch',6,'deparr'));	
 }
 Nav.resetJourneySearch = function()
 {
 	$('#journeySearch',$('#journeyPage')).find('.link:not(#fromStation)').removeClass('selected, active, lastselected');
 	
-	$('#fromStation').addClass('selected').removeClass('clear').attr('code','').find('input:first').val('');
-	$('#toStation').removeClass('clear').attr('code','').find('input:first').val('');
+	$('#fromStation').addClass('selected').removeClass('clear').attr('data-code','').find('input:first').val('');
+	$('div.inputClick',$('#fromStation')).html('');
+	$('#toStation').removeClass('clear').attr('data-code','').find('input:first').val('');
+	$('div.inputClick',$('#toStation')).html('');
 	
 	$('#outDate').data('date',Utils.interval15min(new Date()));
 	$('#retDate').data('date',Utils.interval15min(new Date()));
-	$('[REL="Datepad"]').each(function(){
+	$('[data-rel="Datepad"]').each(function(){
 		$(this).parents('td:first').find('.dt').html($(this).data('date').format("dd mmm yyyy"));
 		$(this).parents('td:first').find('.tm').html($(this).data('date').format("HH:MM"));
 	});
@@ -198,20 +211,30 @@ Nav.resetJourneySearch = function()
 }
 Nav.goRecentJourney = function(selLink)
 {
-	$('#fromStation').addClass('clear').attr('code',selLink.attr('code')).find('input:first').val($('.from > h2',selLink).html());
-	$('#toStation').addClass('clear').attr('code',selLink.attr('retcode')).find('input:first').val($('.to > h2',selLink).html());
+	$('#fromStation').addClass('clear').attr('data-code',selLink.attr('data-code')).find('input:first').val($('.from > h2',selLink).html());
+	$('div.inputClick',$('#fromStation')).html($('.from > h2',selLink).html());
+	$('#toStation').addClass('clear').attr('data-code',selLink.attr('retcode')).find('input:first').val($('.to > h2',selLink).html());
+	$('div.inputClick',$('#toStation')).html($('.to > h2',selLink).html());
 
-	var oDt = Utils.stringToDateJS(selLink.attr('outDate'));
-	if(!oDt) rDt = Utils.interval15min(Nav.fixDate(new Date()));
+	var oDt = null;
+	try
+	{
+		oDt = Utils.stringToDateJS(selLink.attr('outDate'));
+	}
+	catch(e) {}
+	if(!oDt) oDt = Utils.interval15min(Nav.fixDate(new Date()));
 	oDt = Nav.fixDate(oDt);
 	oDt = Utils.interval15min(oDt);
 	$('#outDate').data('date',oDt);
 	
 	if(selLink.attr('return')=='true')
 	{
-		var rDt = Utils.stringToDateJS(selLink.attr('retDate'));
+		var rDt = null;
+		try {
+			rDt = Utils.stringToDateJS(selLink.attr('retDate'));
+		} catch(e) {}
 		if(!rDt) rDt = Utils.interval15min(Nav.fixDate(new Date()));
-		alert('retDate=='+ rDt)
+		//SS.log('retDate=='+ rDt)
 		rDt = Nav.fixDate(rDt);
 		rDt = Utils.interval15min(rDt);
 		$('#retDate').data('date',rDt);	
@@ -221,8 +244,8 @@ Nav.goRecentJourney = function(selLink)
 	{
 		Nav.addReturn($('#addReturn.link'));
 	}
-	$('[REL="Datepad"]').each(function(){
-		//alert($(this).data('date'));
+	$('[data-rel="Datepad"]').each(function(){
+		//SS.log($(this).data('date'));
 		if(!$(this).data('date')) $(this).data('date',new Date());
 		$(this).parents('td:first').find('.dt').html($(this).data('date').format("dd mmm yyyy"));
 		$(this).parents('td:first').find('.tm').html($(this).data('date').format("HH:MM"));
@@ -237,19 +260,19 @@ Nav.fixDate = function(date)
 {
 	if(!date) date = new Date();
 	var now = new Date();
-	//alert(now.getTime() > date.getTime() + 'Date::' + date + ' >> Now::' + now)
+	//SS.log(now.getTime() > date.getTime() + 'Date::' + date + ' >> Now::' + now)
 	if(now.getTime() > date.getTime())
 	{
 		if(date.getHours() > now.getHours())
 		{
 			now.setHours(date.getHours(),date.getMinutes(),0,0)
 		}		
-		//alert('Date::' + date + ' >> Now::' + now)
+		//SS.log('Date::' + date + ' >> Now::' + now)
 		return now;
 	}
 	else
 	{
-		//alert('Date::' + date + ' >> Now::' + now)
+		//SS.log('Date::' + date + ' >> Now::' + now)
 		return date;
 	}
 }
@@ -258,7 +281,7 @@ Nav.addReturn = function(selLink)
 	if(selLink.hasClass('checked'))
 	{
 		selLink.removeClass('checked');
-		selLink.html('Add return journey');
+		selLink.html('<h2>Add return journey</h2>');
 		$('#retDate').addClass('hidden');
 		selLink.parents('td:first').next('td').hide();
 		Nav.init();
@@ -266,7 +289,7 @@ Nav.addReturn = function(selLink)
 	else
 	{
 		selLink.addClass('checked');
-		selLink.html('Remove return journey');
+		selLink.html('<h2>Remove return journey</h2>');
 		$('#retDate').removeClass('hidden');
 		
 		var dt = Utils.interval15min($('#outDate').data('date').DateAdd('h',2));
@@ -286,19 +309,25 @@ Nav.planJourney = function()
 		Alert.show('Please choose from and to stations');
 		return false;
 	}
-	if((!$('#fromStation').attr('code') || $('#fromStation').attr('code') == '') && $('input',$('#fromStation')).val() != '')
+	if((!$('#fromStation').attr('data-code') || $('#fromStation').attr('data-code') == '') && $('input',$('#fromStation')).val() != '')
 	{
 		NRE.findStation($('input',$('#fromStation')).val(),function(data){
 			var list = Loader.stationSearch(data);
 			if(list=='')
 			{
-				Alert.show('Can not find any matching stations for "'+$('input',$('#fromStation')).val()+'". Please try with different keywords.');
+				var srch = $('input',$('#fromStation')).val();
+				if(srch.length >= 35)
+				{
+					srch = srch.substring(0,31)+' ...';
+				}
+				Alert.show('Can not find any matching stations for "'+srch+'". Please try with different keywords.');
 				return false;
 			}
 			
 			$('#stChTable').html(list).data('callback',function(code,text){
-				$('#fromStation').attr('code',code);
-				$('input',$('#fromStation')).val(text)
+				$('#fromStation').attr('data-code',code);
+				$('input',$('#fromStation')).val(text);
+				$('div.inputClick',$('#fromStation')).html(text);
 				Nav.planJourney();
 			});
 			KeyHandler.changeView('stationChooserPage','stChTable');
@@ -310,22 +339,28 @@ Nav.planJourney = function()
 		return false;
 	}
 	
-	if((!$('#toStation').attr('code') || $('#toStation').attr('code') == '') && $('input',$('#toStation')).val() != '')
+	if((!$('#toStation').attr('data-code') || $('#toStation').attr('data-code') == '') && $('input',$('#toStation')).val() != '')
 	{
 		NRE.findStation($('input',$('#toStation')).val(),function(data){
 			var list = Loader.stationSearch(data);
 			if(list=='')
 			{
-				Alert.show('Can not find any matching stations for "'+$('input',$('#toStation')).val()+'". Please try with different keywords.');
+				var srch = $('input',$('#toStation')).val();
+				if(srch.length >= 35)
+				{
+					srch = srch.substring(0,31)+' ...';
+				}
+				Alert.show('Can not find any matching stations for "'+srch+'". Please try with different keywords.');
 				if(KeyHandler.hasPage == 'stationChooserPage')
 				{
 					KeyHandler.viewBack();
 				}
 				return false;
-			}
+			};
 			$('#stChTable').html(list).data('callback',function(code,text){
-				$('#toStation').attr('code',code);
-				$('input',$('#toStation')).val(text)
+				$('#toStation').attr('data-code',code);
+				$('input',$('#toStation')).val(text);
+				$('div.inputClick',$('#toStation')).html(text);
 				Nav.planJourney();
 			});
 			KeyHandler.changeView('stationChooserPage','stChTable',null,true);
@@ -337,7 +372,7 @@ Nav.planJourney = function()
 		return false;
 	}
 	
-	if(!$('#fromStation').attr('code') || $('#fromStation').attr('code') == '' || !$('#toStation').attr('code') || $('#toStation').attr('code') == '')
+	if(!$('#fromStation').attr('data-code') || $('#fromStation').attr('data-code') == '' || !$('#toStation').attr('data-code') || $('#toStation').attr('data-code') == '')
 	{
 		//Alert.show('Please choose from and to stations');
 		return false;
@@ -347,10 +382,10 @@ Nav.planJourney = function()
 		RecentSaved.save('journeySearch',
 			{
 				'from':{
-					'code':$('#fromStation').attr('code'),
+					'code':$('#fromStation').attr('data-code'),
 					'text':$('input',$('#fromStation')).val()},
 				'to':{
-					'code':$('#toStation').attr('code'),
+					'code':$('#toStation').attr('data-code'),
 					'text':$('input',$('#toStation')).val()},
 				'outDate':$('#outDate').data('date'),
 				'isReturn':$('#addReturn').hasClass('checked'),
@@ -358,14 +393,14 @@ Nav.planJourney = function()
 			}
 		);
 		
-		var fromGrp = !isNaN(parseInt($('#fromStation').attr('code')));
-		var toGrp = !isNaN(parseInt($('#toStation').attr('code')));
+		var fromGrp = !isNaN(parseInt($('#fromStation').attr('data-code')));
+		var toGrp = !isNaN(parseInt($('#toStation').attr('data-code')));
 		
-		//alert(toGrp + '=' + '!isNaN(parseInt($("#fromStation").attr("code")));' + parseInt($('#fromStation').attr('code')));
-		NRE.GetRealtimeJourneyPlanRequest($('#fromStation').attr('code'),fromGrp, $('#toStation').attr('code'),toGrp, Utils.GetUTCTimestamp($('#outDate').data('date')), $('#fastTrains').hasClass('checked'), function(xmlDoc){
-			alert('here');
+		//SS.log(toGrp + '=' + '!isNaN(parseInt($("#fromStation").attr("data-code")));' + parseInt($('#fromStation').attr('data-code')));
+		NRE.GetRealtimeJourneyPlanRequest($('#fromStation').attr('data-code'),fromGrp, $('#toStation').attr('data-code'),toGrp, Utils.GetUTCTimestamp($('#outDate').data('date')), $('#fastTrains').hasClass('checked'), function(xmlDoc){
+			//SS.log('here');
 			var list = Loader.RealtimeJourneyPlan(xmlDoc,'out');
-			alert(list);
+			//SS.log(list);
 			if($('ul.error',$('<div>'+list+'</div>')).length <= 0)
 			{
 				$('#h_from',$('#journeyResPage')).html($('#fromStation > input:first').val());
@@ -377,7 +412,7 @@ Nav.planJourney = function()
 				$('#outTable').data('date',$('#outDate').data('date'));
 				
 				$('#outTable').html(list);
-				//alert('Change to outTable');
+				//SS.log('Change to outTable');
 				KeyHandler.changeView('journeyResPage','outTable');
 				//Scroller.init('outTable');
 			
@@ -392,11 +427,11 @@ Nav.planJourney = function()
 					$('#addReturnResPage').show();
 					
 					//Return
-					var fromGrp = !isNaN(parseInt($('#fromStation').attr('code')));
-					var toGrp = !isNaN(parseInt($('#toStation').attr('code')));
-					NRE.GetRealtimeJourneyPlanRequest($('#toStation').attr('code'),toGrp, $('#fromStation').attr('code'),fromGrp, Utils.GetUTCTimestamp($('#retDate').data('date')), $('#fastTrains').hasClass('checked'), function(xmlDoc){
+					var fromGrp = !isNaN(parseInt($('#fromStation').attr('data-code')));
+					var toGrp = !isNaN(parseInt($('#toStation').attr('data-code')));
+					NRE.GetRealtimeJourneyPlanRequest($('#toStation').attr('data-code'),toGrp, $('#fromStation').attr('data-code'),fromGrp, Utils.GetUTCTimestamp($('#retDate').data('date')), $('#fastTrains').hasClass('checked'), function(xmlDoc){
 						var list = Loader.RealtimeJourneyPlan(xmlDoc,'ret');
-						////alert(list);
+						////SS.log(list);
 						
 						if($('ul.error',$('<div>'+list+'</div>')).length <= 0)
 						{
@@ -417,7 +452,7 @@ Nav.planJourney = function()
 						}
 						else
 						{
-							alert('API error::' + list);
+							SS.log('API error::' + list);
 							Alert.show($('ul.error > li',$('<div>'+list+'</div>')).html());
 						}
 					});
@@ -435,7 +470,7 @@ Nav.planJourney = function()
 			}
 			else
 			{
-				alert('API error::' + list);
+				SS.log('API error::' + list);
 				Alert.show($('ul.error > li',$('<div>'+list+'</div>')).html());
 			}
 		});

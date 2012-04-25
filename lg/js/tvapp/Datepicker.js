@@ -36,8 +36,8 @@ var Datepicker = function(field, options)
 			m_this.field = document.createElement("div");
 			m_this.field.id = 'datePicker_' + field;
 			m_this.field.style.display = 'none';
-			m_this.field.style.top = m_this.top;
-			m_this.field.style.left = m_this.left;
+			m_this.field.style.top = m_this.top +'px';
+			m_this.field.style.left = m_this.left +'px';
 			m_this.field.setAttribute("class", 'dp-datepicker'); //For Most Browsers
 			m_this.field.setAttribute("className", 'dp-datepicker'); //For IE; harmless to other browsers.	
 			document.getElementsByTagName('body')[0].appendChild(m_this.field);
@@ -55,11 +55,23 @@ var Datepicker = function(field, options)
 			var f = document.getElementById(m_this.links[i]);
 			if(i==index)
 			{
+				if(SS.device == 'philips')
+				{
+					SS.setFocus($(f).attr('id'));
+					SS.setHover($(f).attr('id'));
+				}
+		
 				f.setAttribute("class", 'dp-field selected');
 				f.setAttribute("className", 'dp-field selected');
 			}
 			else
 			{
+				if(SS.device == 'philips')
+				{
+					SS.offFocus($(f).attr('id'));
+					SS.offHover($(f).attr('id'));
+				}
+				
 				f.setAttribute("class", 'dp-field');
 				f.setAttribute("className", 'dp-field');
 			}
@@ -92,7 +104,11 @@ var Datepicker = function(field, options)
 	}
 	this.m_draw = function()
 	{
-		var html = '<a id="dp-a" href="javascript:void(0);" onkeydown=""></a><div class="dp-header">Choose date & time</div>' +
+		var html = 
+		'<div class="dp-datepickerBgLeft"></div>' + 
+		'<div class="dp-datepickerBgMid"></div>' + 
+		'<div class="dp-datepickerBgRight"></div>' + 
+		'<a id="dp-a" href="javascript:void(0);" onkeydown=""></a><div class="dp-header">Choose date & time</div>' +
 		'<div class="dp-titles">' +
 			'<div class="dp-title">Year</div>' +
 			'<div class="dp-title">Month</div>' +
@@ -122,47 +138,47 @@ var Datepicker = function(field, options)
 			'<div id="dp-minute-down" class="dp-arrow"></div>' +
 		'</div>' +
 		'<div class="dp-footer">' +
-			'<DIV class="dp-btn-left"></DIV>' +
-			'<DIV class="dp-btn-right"></DIV>' +
-			'<DIV class="dp-btn-up"></DIV>' +
-			'<DIV class="dp-btn-down"></DIV>' +
-			'<DIV class="dp-btn-back"><h3>Cancel</h3></DIV>' +
-			'<DIV class="dp-btn-enter"><h3>Select</h3></DIV>' +
+			'<div class="dp-btn-left"></div>' +
+			'<div class="dp-btn-right"></div>' +
+			'<div class="dp-btn-up"></div>' +
+			'<div class="dp-btn-down"></div>' +
+			'<div class="dp-btn-back"><h3>Cancel</h3></div>' +
+			'<div class="dp-btn-enter"><h3>Select</h3></div>' +
 		'</div>';
 		
 		SS.putInnerHTML(m_this.field, html);
 		
-		$(m_this.field).find('.dp-footer').find('DIV').each(function(){
+		$(m_this.field).find('.dp-footer').find('div').each(function(){
 			$(this).unbind('click').bind('click',function()
 			{	
 				if($(this).hasClass('dp-btn-left'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_LEFT);
+					m_this.keydown(null,37);
 				}
 				else if($(this).hasClass('dp-btn-right'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_RIGHT);
+					m_this.keydown(null,39);
 				}
 				else if($(this).hasClass('dp-btn-up'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_UP);
+					m_this.keydown(null,38);
 				}
 				else if($(this).hasClass('dp-btn-down'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_DOWN);
+					m_this.keydown(null,40);
 				}
 				else if($(this).hasClass('dp-btn-back'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_RETURN);
+					m_this.keydown(null,461);
 				}
 				else if($(this).hasClass('dp-btn-enter'))
 				{
-					m_this.keydown(null,KeyHandler.tvKey.KEY_ENTER);
+					m_this.keydown(null,13);
 				}
 			});
 		});
 		
-		$(m_this.field).find('.dp-fields').find('DIV.dp-field').each(function(i){
+		$(m_this.field).find('.dp-fields').find('div.dp-field').each(function(i){
 			$(this).unbind('mouseover').bind('mouseover',function()
 			{	
 				m_this.selected = i;
@@ -170,7 +186,7 @@ var Datepicker = function(field, options)
 			});
 		});
 		
-		$(m_this.field).find('.dp-arrows.dp-up').find('DIV.dp-arrow').each(function(i){
+		$(m_this.field).find('.dp-arrows.dp-up').find('div.dp-arrow').each(function(i){
 			$(this).unbind('mouseover').bind('mouseover',function()
 			{	
 				m_this.selected = i;
@@ -180,11 +196,11 @@ var Datepicker = function(field, options)
 			{	
 				m_this.selected = i;
 				m_this.m_select(m_this.selected);
-				m_this.keydown(null,KeyHandler.tvKey.KEY_UP);
+				m_this.keydown(null,38);
 			});
 		});
 		
-		$(m_this.field).find('.dp-arrows.dp-down').find('DIV.dp-arrow').each(function(i){
+		$(m_this.field).find('.dp-arrows.dp-down').find('div.dp-arrow').each(function(i){
 			$(this).unbind('mouseover').bind('mouseover',function()
 			{	
 				m_this.selected = i;
@@ -194,7 +210,7 @@ var Datepicker = function(field, options)
 			{	
 				m_this.selected = i;
 				m_this.m_select(m_this.selected);
-				m_this.keydown(null,KeyHandler.tvKey.KEY_DOWN);
+				m_this.keydown(null,40);
 			});
 		});
 	}
@@ -206,9 +222,9 @@ var Datepicker = function(field, options)
 		if(minDate) m_this.minDate = minDate;
 		m_this.tempDate = new Date(m_this.date.getTime());
 		document.getElementsByTagName('body')[0].appendChild(m_this.field);
-		document.getElementById('dp-a').onkeydown = function(e,kc) { m_this.keydown(e,kc); }
+		//document.getElementById('dp-a').onkeydown = function(e,kc) { m_this.keydown(e,kc); }
 		m_this.field.style.display = 'block';
-		document.getElementById('dp-a').focus();
+		//document.getElementById('dp-a').focus();
 		m_this.visible = true;
 		
 		m_this.selected = 2;
@@ -221,8 +237,8 @@ var Datepicker = function(field, options)
 	{
 		if(!m_this.visible) return;
 
-		document.getElementById('dp-a').blur();
-		document.getElementById('dp-a').onkeydown = null;
+		//document.getElementById('dp-a').blur();
+		//document.getElementById('dp-a').onkeydown = null;
 		m_this.field.style.display = 'none';
 		document.getElementsByTagName('body')[0].removeChild(m_this.field);
 		m_this.visible = false;
@@ -230,14 +246,14 @@ var Datepicker = function(field, options)
 		/*
 		if(event)
 		{
-			alert('Buble')
+			//SS.log('Buble')
 			//bubling don't occure cos we removed element from DOM
 			document.getElementsByTagName('body')[0].dispatchEvent(event);
 		}
 		
 		if(key)
 		{
-			alert('here');
+			SS.log('here');
 			KeyHandler.processKey(key);
 		}*/
 
@@ -248,23 +264,24 @@ var Datepicker = function(field, options)
 	{
 		if(!m_this.visible) return;
 		if(e) e.stopPropagation();
-		var keycode = (e ? e.keyCode : kc);
-		switch(keycode)
+		var key = (e ? e.keyCode : kc);
+		SS.log('Datepicker key::' + key )
+		switch(key)
 		{
-			case KeyHandler.tvKey.KEY_LEFT:
-				//alert('left');
+			case 37:
+				//SS.log('left');
 				m_this.selected--;
 				m_this.selected = m_this.selected < 0 ? m_this.links.length-1 : m_this.selected;
 				m_this.m_select(m_this.selected);
 				break;
-			case KeyHandler.tvKey.KEY_RIGHT:
-				//alert('right');
+			case 39:
+				//SS.log('right');
 				m_this.selected++;
 				m_this.selected = m_this.selected > m_this.links.length-1 ? 0 : m_this.selected;
 				m_this.m_select(m_this.selected);
 				break;
-			case KeyHandler.tvKey.KEY_UP:
-				//alert('up');
+			case 38:
+				//SS.log('up');
 				switch(m_this.links[m_this.selected])
 				{
 					case 'dp-year':
@@ -285,8 +302,8 @@ var Datepicker = function(field, options)
 				}
 				m_this.m_drawnumbers();
 				break;
-			case KeyHandler.tvKey.KEY_DOWN:
-				//alert('down');
+			case 40:
+				//SS.log('down');
 				switch(m_this.links[m_this.selected])
 				{
 					case 'dp-year':
@@ -307,15 +324,15 @@ var Datepicker = function(field, options)
 				}
 				m_this.m_drawnumbers();
 				break;
-			case KeyHandler.tvKey.KEY_ENTER:
-				//alert('enter');
+			case 13:
+				//SS.log('enter');
 				m_this.hide();
 				m_this.date = new Date(m_this.tempDate.getTime());
 				m_this.onClose(m_this.date.format(m_this.format));
 				
 				break;
-			case KeyHandler.tvKey.KEY_RETURN:
-				//alert('return');
+			case 461:
+				//SS.log('return');
 				m_this.hide();
 				m_this.tempDate = new Date(m_this.date.getTime());
 				m_this.onClose(m_this.date.format(m_this.format));

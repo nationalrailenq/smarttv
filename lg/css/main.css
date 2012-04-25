@@ -1,4 +1,18 @@
 /*Main Style Sheet*/
+#debugWindow{
+	/*background:#fff !important;*/
+	overflow:hidden !important;
+}
+img#GA{
+	width:1px;
+	height:1px;
+	position:absolute;
+	z-index:0;
+	left:1px;
+	bottom:1px;
+	border:none !important;
+	background:none;
+}
 #connectionAlert {
 	z-index:99;
 }
@@ -6,13 +20,20 @@ INPUT {
 	border:none !important;
 }
 body {
-	width:100%;
-	height:100%;
+	
 	/*font-family:HelveticaNeueBold;*/
 	font-family:Arial;
 	color:#fff;
 	letter-spacing:1px;
-	overflow: hidden;
+	
+	width:1280px !important;
+	height:720px !important;
+	overflow:hidden;
+	margin:0px !important;
+	padding:0px !important;
+	position:fixed;
+	padding:0px;
+	margin:0px;
 }
 h1 {
 	font-size:29px;
@@ -45,25 +66,43 @@ h3, h4 {
 .input.selected {
 	background:url(../img/input_selected.png) center center no-repeat !important;
 }
-.input input {
+.input .inputClick{
+	display:inline-block;
+	width:363px !important;
+	height:40px !important;
+	font-size:29px !important;
+	line-height:40px !important;
+	color:#999999 !important;
+	border:none !important;
+	margin:8px 0px 0px 7px !important;
+	padding:3px !important;	
+	overflow:hidden;
+}
+.input input{
+	display:inline-block;
+	width:363px !important;
+	height:40px !important;
 	font-size:29px !important;
 	line-height:29px !important;
-	display:inline-block !important;
-	width:363px !important;
 	color:#999999 !important;
-	height:40px !important;
 	border:none !important;
 	background:#eee !important;
 	margin:8px 0px 0px 7px !important;
-	padding:3px !important;
+	padding:3px !important;	
 }
-.input.selected input {
+.input.selected input, .input.selected .inputClick {
 	border:none !important;
-	background:#eee url(../img/Press_Enter.png) 13px center no-repeat!important;
+	background:#eee url(../img/Press_Enter.png) 13px center no-repeat !important;
 }
-.input.selected.clear input {
+body.philips .input.selected input, .input.selected .inputClick {
 	border:none !important;
 	background:#eee !important;
+	background-image: none !important;
+}
+.input.selected.clear input, .input.selected.clear .inputClick {
+	border:none !important;
+	background:#eee !important;
+	background-image: none !important;
 }
 #outDate, #retDate, #addReturn {
 	background:url(../img/Arrow.png) 4px 4px no-repeat;
@@ -99,6 +138,123 @@ h3, h4 {
 }
 .goButtonSml.selected {
 	background:url(../img/Go_Butt_Sml_Selected.png) no-repeat center center !important;
+}
+.journeoySearchTable
+{
+    border:none;
+    width:1200px ;
+    margin-left:35px;
+    margin-top:35px;	 
+}
+.fromTD1
+{
+    width:67px;
+    padding:0px 13px 0px 13px;
+    text-align:right;
+}
+.fromTD2
+{
+    width:400px;
+}
+.fromTD3
+{
+	width:287px;
+	text-align:right;
+	padding:0px 13px 0px 0px;
+}
+.fromTD3 h1
+{
+    float:left;
+    width:200px;
+    padding-left:27px;
+}
+
+.toTD1
+{
+    padding:0px 13px 0px 13px;
+    height:63px;
+    text-align:right;
+}
+.jrTable1
+{
+    border:none;
+    width:1067px;
+    height:133px;
+    margin:15px 0px 0px 25px;
+}
+.jrTable2
+{
+    border:none;
+    width:1120px;
+    margin:0px 47px 0px 47px;
+}
+.jrDate
+{
+    width:180px;
+    text-align:left;
+}
+.jrTime
+{
+    width:80px;
+    text-align:left;
+}
+.jrReturn
+{
+    width:180px;
+    align:left;
+}
+.jrReturnTime
+{
+     width:80px;
+     text-align:left;
+}
+
+.jsTable1
+{
+    border:none;
+     width:1067px;
+     height:133px;
+     margin:15px 0px 0px 25px;
+}
+.jsTable2
+{
+    border:none;
+    width:1120px;
+    margin:0px 47px 0px 47px;
+}
+.jsDate
+{
+     width:170px;
+     text-align:left;
+}
+.jsTime
+{
+     width:80px;
+     text-align:left;
+}
+.jsReturnDate
+{
+     width:170px;
+     text-align:left;
+}
+.jsReturnTime
+{
+     width:170px;
+     text-align:left;
+}
+.addReturnJourney
+{
+    height:85px;
+}
+.departTable
+{
+     width:1200px;
+     margin-left:35px;
+     margin-top:13px;
+}
+.departStation
+{
+    padding:0px 13px 0px 13px;
 }
 .navButton {
 	width:184px;
@@ -192,8 +348,8 @@ body.homePage .recentButton.selected {
 .page {
 	display:none;
 	position:absolute;
-	top:0px;
-	left:0px;
+	top:0px !important;
+	left:0px !important;
 	width:1280px;
 	height:720px;
 	overflow:hidden;
@@ -234,6 +390,7 @@ body.homePage .recentButton.selected {
 	z-index:98;
 	background:url(../img/footer/Bar.png) top center repeat-x;
 	padding:0px 27px 0px 27px;
+	overflow:hidden;
 }
 
 .loader {
@@ -245,7 +402,7 @@ body.homePage .recentButton.selected {
 	height:37px;
 	z-index:99;
 }
-.footer DIV {
+.footer div {
 	float:left;
 	height:29px;
 	display:none;
@@ -255,29 +412,62 @@ body.homePage .recentButton.selected {
 }
 .footer .btn-A {
 	background:url(../img/footer/A.png) left center no-repeat;
+	float:left;
+	height:29px;
+	display:none;
+	padding:7px 0 0 37px;
+	margin-left:13px;
+	color:#fff;
 }
 .footer .btn-B {
 	background:url(../img/footer/B.png) left center no-repeat;
+	float:left;
+	height:29px;
+	display:none;
+	padding:7px 0 0 37px;
+	margin-left:13px;
+	color:#fff;
 }
 .footer .btn-C {
 	background:url(../img/footer/C.png) left center no-repeat;
+	float:left;
+	height:29px;
+	display:none;
+	padding:7px 0 0 37px;
+	margin-left:13px;
+	color:#fff;
 }
 .footer .btn-D {
 	background:url(../img/footer/D.png) left center no-repeat;
+	float:left;
+	height:29px;
+	display:none;
+	padding:7px 0 0 37px;
+	margin-left:13px;
+	color:#fff;
 }
-
 
 .footer .btn-back {
 	float:right;
 	padding:7px 37px 0px 0px;
 	margin-right:13px;
 	background:url(../img/footer/Back.png) right center no-repeat;
+	
+	
+	height:29px;
+	display:none;
+	
+	
+	color:#fff;
 }
 .footer .btn-exit {
 	float:right;
 	padding:7px 48px 0px 0px;
 	margin-right:13px;
 	background:url(../img/footer/Exit.png) right center no-repeat;
+	height:29px;
+	display:none;
+	color:#fff;
 }
 body.homePage .header {
 	background:url(../img/Logo_Small.png) center center no-repeat !important;
@@ -434,7 +624,7 @@ body .content .recent_pane#recentDepArr {
 	background-color: #CCC;
 	z-index:98;
 	min-width:367px;
-	position:absolute;
+	position:fixed;
 	top:0px;
 	left:0px;
 	margin:0px;
@@ -850,8 +1040,12 @@ body .content .recent_pane#recentDepArr {
 	top:53px;
 	left:35px;
 	color:#ffcc00;
-	/*margin:35px 0px 0px 35px;*/
-/*	margin:53px 0px 0px 35px;*/
+}
+.detHeader2{
+	position:absolute;
+	top:173px;
+	left:35px;
+	color:#ffcc00;
 }
 .detHeader H4{
 	display:block;
@@ -972,9 +1166,35 @@ body .content .recent_pane#recentDepArr {
 	left:267px;	
 	width:680px;
 	height:280px;
-	z-index:99;
-	background:#f00;
-	background:url(../img/datepicker/BackgroundFull.png) center center no-repeat;
+	z-index:98;
+	/*background:url(../img/datepicker/BackgroundFull.png) center center no-repeat;*/
+}
+.alerBoxBgLeft{
+	position:absolute;
+	top:0px;
+	left:8px;	
+	width:28px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_left.png) left center no-repeat;
+}
+.alerBoxBgRight{
+	position:absolute;
+	top:0px;
+	right:8px;	
+	width:28px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_right.png) right center no-repeat;
+}
+.alerBoxBgMid{
+	position:absolute;
+	top:0px;
+	left:28px;	
+	width:624px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_middle.png) center repeat-x;
 }
 .alerBox-header{
 	position:absolute;
@@ -1030,7 +1250,10 @@ body .content .recent_pane#recentDepArr {
 	color:#ebebeb;
 	overflow:hidden;
 }
+.alerBox-msg table{
+	height:200px;
+}
 .alerBox-msg h1, .alerBox-msg h2{
 	width:597px;
-	word-wrap: break-word;
+	/*word-wrap: break-word;*/
 }

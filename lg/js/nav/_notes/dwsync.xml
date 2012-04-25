@@ -12,5 +12,40 @@
 <file name="Nav.arrivalPage.js" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129723910135807767" remote="129723910130000000" />
 <file name="Nav.journeyResPage.js" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129724207405995392" remote="129724207400000000" />
 <file name="Nav.departureDetTable.js" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129720541801953125" remote="129720541800000000" />
-<file name="Nav.journeyResPage.js" server="ftp.tvappagency.com//lg/nre/" local="129733495259677059" remote="129733495200000000" />
+<file name="Nav.arrivalPage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.autoComplete.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.datepad.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.deparrPage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.departureDetTable.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.departurePage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.header.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.homePage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.journeyPage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.journeyResPage.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.js" server="ftp.tvappagency.com//nre/Philips/" local="129732684095196575" remote="129732684000000000" />
+<file name="Nav.keypad.js" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610800000000" />
+<file name="Nav.arrivalPage.js" server="ftp.tvappagency.com//philips/nre/" local="129733675522084153" remote="129733675200000000" />
+<file name="Nav.autoComplete.js" server="ftp.tvappagency.com//philips/nre/" local="129733675665327224" remote="129733675200000000" />
+<file name="Nav.datepad.js" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726600000000" />
+<file name="Nav.deparrPage.js" server="ftp.tvappagency.com//philips/nre/" local="129733680335539335" remote="129733680000000000" />
+<file name="Nav.departureDetTable.js" server="ftp.tvappagency.com//philips/nre/" local="129733680331019076" remote="129733680000000000" />
+<file name="Nav.departurePage.js" server="ftp.tvappagency.com//philips/nre/" local="129733680326188808" remote="129733680000000000" />
+<file name="Nav.header.js" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726600000000" />
+<file name="Nav.homePage.js" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726600000000" />
+<file name="Nav.journeyPage.js" server="ftp.tvappagency.com//philips/nre/" local="129733680319528427" remote="129733680000000000" />
+<file name="Nav.journeyResPage.js" server="ftp.tvappagency.com//philips/nre/" local="129736073869337873" remote="129736073400000000" />
+<file name="Nav.js" server="ftp.tvappagency.com//philips/nre/" local="129733672053787471" remote="129733671600000000" />
+<file name="Nav.keypad.js" server="ftp.tvappagency.com//philips/nre/" local="129732809056484643" remote="129732808800000000" />
+<file name="Nav.arrivalPage.js" server="ftp.tvappagency.com//nre/philips/" local="129757778742721735" remote="129757780800000000" />
+<file name="Nav.js" server="ftp.tvappagency.com//nre/philips/" local="129763659492847375" remote="129763659000000000" />
+<file name="Nav.datepad.js" server="ftp.tvappagency.com//nre/philips/" local="129744694379441499" remote="129749233200000000" />
+<file name="Nav.homePage.js" server="ftp.tvappagency.com//nre/philips/" local="129749829699438550" remote="129749829600000000" />
+<file name="Nav.autoComplete.js" server="ftp.tvappagency.com//nre/philips/" local="129757778865233626" remote="129757780800000000" />
+<file name="Nav.deparrPage.js" server="ftp.tvappagency.com//nre/philips/" local="129757779031662800" remote="129757780800000000" />
+<file name="Nav.departurePage.js" server="ftp.tvappagency.com//nre/philips/" local="129757779182941247" remote="129757780800000000" />
+<file name="Nav.journeyPage.js" server="ftp.tvappagency.com//nre/philips/" local="129757779343219982" remote="129757780800000000" />
+<file name="Nav.journeyResPage.js" server="ftp.tvappagency.com//nre/philips/" local="129757779429179621" remote="129757780800000000" />
+<file name="Nav.keypad.js" server="ftp.tvappagency.com//nre/philips/" local="129763051984372282" remote="129763051800000000" />
+<file name="Nav.departureDetTable.js" server="ftp.tvappagency.com//nre/philips/" local="129757779112347251" remote="129757780800000000" />
+<file name="Nav.header.js" server="ftp.tvappagency.com//nre/philips/" local="129744694379661511" remote="129749233200000000" />
 </dwsync>

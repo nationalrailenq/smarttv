@@ -4,7 +4,7 @@ var Scroller = {
 Scroller.init = function(view)
 {
 	var table = $('#'+view);
-	//alert('INIT Scroll:::'+ view + ':::' + table.hasClass('scroolable'))
+	//SS.log('INIT Scroll:::'+ view + ':::' + table.hasClass('scroolable'))
 	if(!table.hasClass('scroolable')) return false;
 	var tb_height = table.height();
 	var ch_height = 0;
@@ -35,12 +35,14 @@ Scroller.init = function(view)
 		table.after(scrooler);
 		
 		$('.scr').drag("init",function(){
+			
         	$(this).attr('dragInitPos',$(this).css('top'));
 			KeyHandler.blocked = true;
 		}).drag("end",function(){
-			alert('end')
+			//SS.log('end')
 			KeyHandler.blocked = false;
       	}).drag(function( ev, dd ){
+			alert('Drag Init####################' + $(this).attr('id'))
 			var isSml = scrooler.hasClass('ssml');
 			var hgth = Math.ceil((isSml ? 149 : 225)*(SS.device != 'samsung' ? 1.33 : 1));
 			var maxScrPos = hgth - (SS.device != 'samsung' ? 100 : 75)
@@ -51,7 +53,7 @@ Scroller.init = function(view)
 			$(this).css('top',(posScr) +'px');
 			
 			var pos = Math.ceil(posScr / ( hgth / ch_height ) / chf_height )* ( chf_height )
-			
+			if(posScr <=2) pos = 0;
 			
 			//var pos = (Nav.selected * ( chf_height ))-(rows*chf_height);
 			
@@ -63,7 +65,7 @@ Scroller.init = function(view)
 }
 Scroller.scroll = function(view)
 {
-	//alert('scrool');
+	//SS.log('scrool');
 	var table = $('#'+view);
 	if(table.data('scrooler'))
 	{
@@ -80,6 +82,12 @@ Scroller.scroll = function(view)
 		var hgth = Math.ceil((isSml ? 149 : 225)*(SS.device != 'samsung' ? 1.33 : 1));
 		
 		var maxScrPos = hgth - (SS.device != 'samsung' ? 100 : 75)
+
+		//in case of miscalculation
+		if(Nav.selected >= Nav.links.length - 1)
+		{
+			pos = 999999;
+		}
 		
 		var posScr = ( pos * (hgth/ch_height) );
 
@@ -88,7 +96,7 @@ Scroller.scroll = function(view)
 		posScr = (posScr > maxScrPos ? maxScrPos : posScr);
 		
 		scr.css('top',(posScr) +'px');
-		//alert('Scroll To::' + pos + ' >>' + ch_height);
+		//SS.log('Scroll To::' + pos + ' >>' + ch_height);
 		table.scrollTop(pos);
 	}
 }

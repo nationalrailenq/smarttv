@@ -36,4 +36,28 @@
 <file name="Button_95_Highlight.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129719867480000000" remote="129719867480000000" />
 <file name="Button_95_Passive.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129719867280000000" remote="129719867280000000" />
 <file name="Button_95_Pressed.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129719867580000000" remote="129719867580000000" />
+<file name="Button_106_Highlight.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_106_Passive.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_106_Pressed.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_115_Highlight.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_115_Passive.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_115_Pressed.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_86_Highlighted.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_86_Passive.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_86_Pressed.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_95_Highlight.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_95_Passive.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_95_Pressed.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Button_106_Highlight.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732725400000000" />
+<file name="Button_106_Passive.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732725400000000" />
+<file name="Button_106_Pressed.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732725400000000" />
+<file name="Button_115_Highlight.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732725400000000" />
+<file name="Button_115_Passive.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_115_Pressed.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_86_Highlighted.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_86_Passive.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_86_Pressed.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_95_Highlight.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_95_Passive.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Button_95_Pressed.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
 </dwsync>

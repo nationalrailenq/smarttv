@@ -8,7 +8,7 @@
 	<cpname itemtype="string"></cpname>
 	<cplogo itemtype="string"></cplogo>
 	<cpauthjs itemtype="string"></cpauthjs>
-	<ver itemtype="string">1.0.10</ver>
+	<ver itemtype="string">1.0.0</ver>
 	<mgver itemtype="string"></mgver>
 	<fullwidget itemtype="boolean">y</fullwidget>
 	<srcctl itemtype="boolean">y</srcctl>

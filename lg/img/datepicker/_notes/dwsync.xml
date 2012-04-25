@@ -22,4 +22,42 @@
 <file name="FieldArrowDown.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129720833320000000" remote="129720833320000000" />
 <file name="FieldArrowUp.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129720833220000000" remote="129720833220000000" />
 <file name="FieldSelected.png" server="C:/Program Files (x86)/Samsung/Samsung TV SDK(3.0.0)/apps/NRE_Build/" local="129720832840000000" remote="129720832840000000" />
+<file name="ArrowDown.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="ArrowLeft.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="ArrowRight.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="ArrowUp.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="BackgroundFull.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="bg.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="f-left.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Field.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="FieldArrowDown.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="FieldArrowUp.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="FieldSelected.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="footer_bg.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="header.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="input.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="input_selected.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Back.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="Enter.png" server="ftp.tvappagency.com//nre/Philips/" local="129732639420000000" remote="129732610200000000" />
+<file name="ArrowDown.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="ArrowLeft.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="ArrowRight.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="ArrowUp.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Back.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="BackgroundFull.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="bg.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Enter.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="f-left.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="Field.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="FieldArrowDown.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="FieldArrowUp.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="FieldSelected.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="footer_bg.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="header.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="input.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="input_selected.png" server="ftp.tvappagency.com//philips/nre/" local="129732639420000000" remote="129732726000000000" />
+<file name="BackgroundFull_left.png" server="ftp.tvappagency.com//nre/philips/" local="129750950802003236" remote="129750963600000000" />
+<file name="BackgroundFull_middle.png" server="ftp.tvappagency.com//nre/philips/" local="129750976555143469" remote="129750977400000000" />
+<file name="BackgroundFull_right.png" server="ftp.tvappagency.com//nre/philips/" local="129750951470878172" remote="129750963600000000" />
+<file name="Field.png" server="ftp.tvappagency.com//nre/philips/" local="129756135213793637" remote="129756136800000000" />
 </dwsync>

@@ -1,29 +1,31 @@
-Nav.arrivalPage = function(keycode)
+Nav.arrivalPage = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	//Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('prev'))
 			{
 				KeyHandler.changeView('arrivalsPage','header');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			Nav.searchDeparturesDetail();
 			break;
-		case KeyHandler.tvKey.KEY_GREEN:
-			$('#searchStation').attr('code','').find('input:first').val('').addClass('selected');
+		case 404:
+			$('#searchStation').removeClass('clear').attr('data-code','').find('input:first').val('').addClass('selected');
+			$('div.inputClick',$('#searchStation')).html('');
+			
 			KeyHandler.changeView('deparrPage','deparrSearch');
 			break;
-		case KeyHandler.tvKey.KEY_YELLOW:
+		case 405:
 			Nav.searchDepartures();
 			break;
 		default:

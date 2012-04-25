@@ -1,13 +1,39 @@
 
 .dp-datepicker{
 	position:absolute;
-	top:267px;
+	top:287px !important;
 	left:267px;	
 	width:680px;
 	height:280px;
 	z-index:98;
-	background:#f00;
-	background:url(../img/datepicker/BackgroundFull.png) center center no-repeat;
+	/*background:url(../img/datepicker/BackgroundFull.png) center center no-repeat;*/
+}
+.dp-datepickerBgLeft{
+	position:absolute;
+	top:0px;
+	left:8px;	
+	width:28px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_left.png) left center no-repeat;
+}
+.dp-datepickerBgRight{
+	position:absolute;
+	top:0px;
+	right:8px;	
+	width:28px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_right.png) right center no-repeat;
+}
+.dp-datepickerBgMid{
+	position:absolute;
+	top:0px;
+	left:28px;	
+	width:624px;
+	height:280px;
+	z-index:0;
+	background:url(../img/datepicker/BackgroundFull_middle.png) center repeat-x;
 }
 .dp-header{
 	position:absolute;
@@ -18,11 +44,9 @@
 	/*background:url(../img/datepicker/header.png) repeat;*/
 	margin:0px 1px 0px 1px;
 	text-align:center;
-	
 	font-size:27px;
 	font-weight:bold;
 	line-height:37px;
-
 	color:#ffcc00;
 	text-shadow:0px 1px 1px #000;
 	

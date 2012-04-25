@@ -9,8 +9,11 @@ NRE.Fetch = function(POST, SOAPAction, SOAPXml, Auth, callback)
 	{
 		//if(POST == 'http://ojp.nationalrail.co.uk/webservices/jpdlr')
 		//{
-			POST = window.location.href + 'nreproxy.php?proxy_url=' + POST;
-			alert(POST);
+			var location = window.location.href;
+			location = location.substring(0,location.lastIndexOf('/')) + '/';
+			//window.location
+			POST = location + 'nreproxy.php?proxy_url=' + POST;
+			SS.log(POST);
 			//POST = 'http://staging.tvappagency.com/nre/nreproxy.php?proxy_url=' + POST;
 		//}
 		//else
@@ -31,17 +34,17 @@ NRE.Fetch = function(POST, SOAPAction, SOAPXml, Auth, callback)
 	xmlhttp.send(SOAPXml);
 
 	xmlhttp.onreadystatechange = function () {
-		//alert(SOAPAction + ' >> ' + xmlhttp.readyState + ' >> ' + xmlhttp.status);
+		//SS.log(SOAPAction + ' >> ' + xmlhttp.readyState + ' >> ' + xmlhttp.status);
 		if(xmlhttp.readyState!=4) return;
-		//alert(SOAPAction + ' >> ' + xmlhttp.status);
+		//SS.log(SOAPAction + ' >> ' + xmlhttp.status);
 		if(xmlhttp.status==0) return;
 		if (xmlhttp.status==200){
-			//alert(xmlhttp.responseText);
+			//SS.log(xmlhttp.responseText);
 			if(!xmlhttp.responseXML) return; //waitfor second response
-			//alert(xmlhttp.responseText);
+			//SS.log(xmlhttp.responseText);
 			
 			var xmlDoc = xmlhttp.responseXML;
-			//alert(xmlDoc);
+			//SS.log(xmlDoc);
 			if(callback) callback(xmlDoc,xmlhttp.status);
 		}
 		else
@@ -49,20 +52,29 @@ NRE.Fetch = function(POST, SOAPAction, SOAPXml, Auth, callback)
 			if(callback) callback(null,xmlhttp.status);
 		}
 		var headers = xmlhttp.getAllResponseHeaders();
-		alert(headers); 
+		SS.log(headers); 
 		KeyHandler.blocked = false;
 	}
 	
 }
 NRE.findStation = function(text,callback)
 {
-	$.ajax({
-		url: "http://ojp.nationalrail.co.uk/find/stations/" + text,
-		dataType: "jsonp",
-		success: function (data) {
-			if(callback) callback(data);
-		}
-	});
+	text = text.replace(/[^a-zA-Z]/g, '');
+	
+	if(text == '') 
+	{
+		if(callback) callback('');
+	}
+	else
+	{
+		$.ajax({
+			url: "http://ojp.nationalrail.co.uk/find/stations/" + text,
+			dataType: "jsonp",
+			success: function (data) {
+				if(callback) callback(data);
+			}
+		});
+	}
 }
 NRE.GetArrivalBoard = function(COD, callback) {
 	var POST = "http://realtime.nationalrail.co.uk/LDBWS/ldb4.asmx";
@@ -126,7 +138,7 @@ NRE.GetRealtimeJourneyPlanRequest = function(origin, originGrp, destination, des
 						'</jpd:RealtimeJourneyPlanRequest>'+
 					'</soapenv:Body>'+
 				'</soapenv:Envelope>';
-	//alert(xml);
+	//SS.log(xml);
 	var authString = "bnJldHZhcHA6a2dNTTR1KVI=";
 	NRE.Fetch(POST,SOAPAction,xml,authString,function(xmlDoc){ if(callback) callback(xmlDoc); });//Loader.RealtimeJourneyPlan('Outward_scrollable',xmlDoc);});
 }

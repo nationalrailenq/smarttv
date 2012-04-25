@@ -10,73 +10,82 @@ var KeyHandler = {
 }
 KeyHandler.init = function() {
 	
-	switch(SS.device)
-	{
-		case "samsung":
-			this.tvKey = new Common.API.TVKeyValue();
-			break;
-		case "lg":
-			this.tvKey = new KeyHandler.TVKeyValue();		
-			break;
-		case "philips":
-			break;
-		case "googletv":
-			break;
-		default:
-			break;
-	}
+	/*For testing on Opera Browser*/
+	KeyHandler.initKeys();
+
+	/*$(body).unbind('mousemove').bind('mousemove',function(event){
+		ev = event || window.event; 
+		SS.log('Mouse Move :Mouse X:'+ev.pageX + ' Mouse Y:'+ev.pageY);
+	});
+	*/
 };
 KeyHandler.initClicks = function(page)
-{
-	$('.footer').find('DIV').each(function(){
-		
+{	
+	$('.footer').find('div').each(function(){
+		//alert($(this).html());
 		$(this).unbind('click').bind('click',function()
 		{
 			if(!KeyHandler.blocked && !Alert.visible && !KeyHandler.hasSubView) 
 			{
+				SS.log('click');
 				if($(this).hasClass('btn-A'))
 				{
-					KeyHandler.processKey(KeyHandler.tvKey.KEY_RED);
+					KeyHandler.processKey(403);
 				}
 				else if($(this).hasClass('btn-B'))
 				{
-					KeyHandler.processKey(KeyHandler.tvKey.KEY_GREEN);
+					KeyHandler.processKey(404);
 				}
 				else if($(this).hasClass('btn-C'))
 				{
-					KeyHandler.processKey(KeyHandler.tvKey.KEY_YELLOW);
+					KeyHandler.processKey(405);
 				}
 				else if($(this).hasClass('btn-D'))
 				{
-					KeyHandler.processKey(KeyHandler.tvKey.KEY_BLUE);
+					KeyHandler.processKey(406);
 				}
 			}
 			if($(this).hasClass('btn-exit'))
 			{
 				SS.quit();
-				//KeyHandler.processKey(KeyHandler.tvKey.KEY_EXIT);
 			}
 			else if($(this).hasClass('btn-back'))
 			{
-				KeyHandler.processKey(KeyHandler.tvKey.KEY_RETURN);
+				KeyHandler.processKey(461);
 			}
 		});
 	});
 	
 	$('.alerBox-footer .alerBox-btn-enter').unbind('click').bind('click',function(){
-		KeyHandler.processKey(KeyHandler.tvKey.KEY_ENTER);
+		KeyHandler.processKey(13);
 	});
 	
 	$('#'+page).find('.view, .subview').each(function(i){
 		KeyHandler.initClicksHover(this);
 	});
+	//$('.link').unbind('mouseover').bind('mouseover',function(){return false;});
 	KeyHandler.initClicksHover($('#header'));
+	
+	KeyHandler.backHover($('#footer'));
+	
+	$('input').each(function(index, element) {
+        $(this).unbind('click').bind('click',function(){
+			KeyHandler.processClick($(this).parent('div'));
+			//return false;
+			SS.log('click>>' + $(this).attr('id'));
+		}).unbind('focus').bind('focus',function(){
+			SS.log('focus>>' + $(this).attr('id'));
+			//$(this).blur();
+			//return false;
+		});
+    });
 };
 KeyHandler.initClicksHover = function(_this)
-{
+{	
+	//if(SS.device == 'philips') return false;
 		if($(_this).hasClass('subview'))
 		{
-			//alert('subview');
+			//SS.log('subview');
 			var m_subview = $(_this).attr('id');
 		}
 		else
@@ -93,41 +102,52 @@ KeyHandler.initClicksHover = function(_this)
 			{
 				$(this).attr('view',m_view);
 			}
-			//alert($(this).attr('id'));
+			//SS.log($(this).attr('id'));
 			if($(this).is(':visible'))
 			{
-				$(this).unbind('click').bind('click',function()
+				
+				$(this).unbind('mouseover').bind('mouseover',function(e)
 				{
-					if(!KeyHandler.blocked && !Alert.visible) 
+					if(SS.device == 'philips')
 					{
-						if($(this).attr('view') != KeyHandler.hasView && !KeyHandler.hasSubView)
+						if(KeyHandler.blocked == true)
 						{
-							KeyHandler.changeView(KeyHandler.hasPage,$(this).attr('view'));
-						}
-						else if($(this).attr('subview') && $(this).attr('subview') != KeyHandler.hasSubView)
-						{
-							KeyHandler.changeView(KeyHandler.hasPage,KeyHandler.hasView,$(this).attr('subview'));
-						}
-						if(!KeyHandler.hasSubView || $(this).attr('subview') == KeyHandler.hasSubView)
-						{
-							KeyHandler.processClick(this);
+							e.stopPropagation();
+							e.preventDefault();
+							return false;
 						}
 					}
-				});
-				$(this).unbind('mouseover').bind('mouseover',function()
-				{
-					//alert('Mouse Over');
+					SS.log('Mouse Over');
 					if(!KeyHandler.blocked && !Alert.visible) 
 					{
-						//alert($(this).attr('subview') + ' !=' + KeyHandler.hasSubView)
-						if($(this).attr('view') != KeyHandler.hasView && !KeyHandler.hasSubView)
+						//SS.log($(this).attr('subview') + ' !=' + KeyHandler.hasSubView)
+						if($(this).attr('view') != KeyHandler.hasView && (!KeyHandler.hasSubView || (SS.device == 'philips' && KeyHandler.hasSubView == 'keypad' && $(this).attr('subview') != 'autoComplete') ) )
 						{
+							if(KeyHandler.hasSubView == 'keypad')
+							{
+								SS.log('####### Hide on over #########');
+								Autocomplete.hide($(Nav.links[Nav.selected]));
+								Utils.Keypad(false);
+								$('#autoComplete').hide();
+							}
+							SS.log('########## 1')
 							KeyHandler.changeView(KeyHandler.hasPage,$(this).attr('view'));
 						}
 						else if($(this).attr('subview') && $(this).attr('subview') != KeyHandler.hasSubView)
 						{
-							alert('change to subview');
+							SS.log('change to subview');
+							SS.log('########## 2')
 							KeyHandler.changeView(KeyHandler.hasPage,KeyHandler.hasView,$(this).attr('subview'));
+						}
+						if($(this).attr('id') != $(Nav.links[Nav.selected]).attr('id') && KeyHandler.hasSubView == 'keypad' && $(this).attr('subview') != 'autoComplete')
+						{
+							if(SS.device == 'philips')
+							{
+								SS.log('####### Hide on over #########');
+								Autocomplete.hide($(Nav.links[Nav.selected]));
+								Utils.Keypad(false);
+								$('#autoComplete').hide();
+							}
 						}
 						if(!KeyHandler.hasSubView || $(this).attr('subview') == KeyHandler.hasSubView)
 						{
@@ -135,22 +155,67 @@ KeyHandler.initClicksHover = function(_this)
 						}
 					}
 				});
+				
+				$(this).unbind('click').bind('click',function()
+				{
+					SS.log('Mousedown');
+					if(!KeyHandler.blocked && !Alert.visible) 
+					{
+						if($(this).attr('view') != KeyHandler.hasView && !KeyHandler.hasSubView)
+						{
+							KeyHandler.changeView(KeyHandler.hasPage,$(this).attr('view'));
+						}
+						else if($(this).attr('subview') && $(this).attr('subview') != KeyHandler.hasSubView)
+						{
+							KeyHandler.changeView(KeyHandler.hasPage,KeyHandler.hasView,$(this).attr('subview'));
+						}
+						
+						if(!KeyHandler.hasSubView || $(this).attr('subview') == KeyHandler.hasSubView)
+						{
+							KeyHandler.processClick(this,false);
+						}
+
+					}
+				});				
 			}
 		});
 }
-KeyHandler.processClick = function(target,dontClick){
+KeyHandler.backHover = function(_this)
+{
+    $(_this).find('.link').each(function(i)
+		{
+			//SS.log($(this).attr('id'));
+			if($(this).is(':visible'))
+			{
+				$(this).unbind('mouseover').bind('mouseover',function()
+				{
+                                    $(this).css('color','#FFCC00')
+				});
+                                $(this).unbind('mouseout').bind('mouseout',function()
+				{
+                                    $(this).css('color','#EEEEEE')
+				});
+			}
+		});
+}
+KeyHandler.processClick = function(target,dontClick)
+{
 	var m_page = this.hasPage;
 	var m_view = this.hasView;
 	var m_subview = this.hasSubView;
 	
-	//alert('Clicked/Hover on ==' + $(target).attr('id') + ' ' + m_page + '>>' + m_view + '>>' + m_subview);
+	SS.log((dontClick ? 'HOVER' : 'CLICK') + '==' + $(target).attr('id') + ' ' + m_page + '>>' + m_view + '>>' + m_subview);
 	
 	
 	if(!KeyHandler.blocked && !Alert.visible) 
 	{
-		//alert('HERE')
+		SS.log('HERE' + dontClick)
+		//hover click preselect link
 		Nav.selectId($(target).attr('id'),true);
-		if(!dontClick) KeyHandler.processKey(KeyHandler.tvKey.KEY_ENTER)
+		if(!dontClick) 
+		{
+			KeyHandler.processKey(13);
+		}
 	}
 	
 };
@@ -158,7 +223,7 @@ KeyHandler.viewBack = function(isReturn)
 {
 	if(this.prevPage.length > 0 && this.prevView.length > 0 && this.prevSubView.length > 0)
 	{
-		//alert('BACK::' + KeyHandler.hasPage + ' >>' + KeyHandler.hasView + ' >>' +KeyHandler.hasSubView)
+		//SS.log('BACK::' + KeyHandler.hasPage + ' >>' + KeyHandler.hasView + ' >>' +KeyHandler.hasSubView)
 		if(isReturn)
 		{
 			if(this.hasSubView == 'keypad') { Utils.Keypad(false); return true; }
@@ -185,16 +250,28 @@ KeyHandler.viewBack = function(isReturn)
 		this.prevView.pop();
 		this.prevSubView.pop();
 		
-		//alert('AFTER BACK::' + KeyHandler.hasPage + ' >>' + KeyHandler.hasView + ' >>' +KeyHandler.hasSubView)
+		//SS.log('AFTER BACK::' + KeyHandler.hasPage + ' >>' + KeyHandler.hasView + ' >>' +KeyHandler.hasSubView)
 	}
 	else
 	{
-		//alert('Exit');
+		//SS.log('Exit');
 		SS.quit();
 	}
 }
-KeyHandler.changeView = function(page, view, subview, force) {
-	//alert('KeyHandler.changeView ' + page + ' ' + view + '  ' + subview)
+KeyHandler.changeView = function(page, view, subview, force) 
+{
+	SS.log('KeyHandler.changeView ' + page + ' ' + view + '  ' + subview)
+	/* no change if nothing to select */
+	if(subview && (subview != 'keypad' && subview != 'datepad'))
+	{
+		if($('#' + subview).find('.link').length <= 0) return false;
+	}
+	
+	if(view && (subview != 'keypad' && subview != 'datepad'))
+	{
+		if($('#' + view).find('.link').length <= 0) return false;
+	}
+	/* END  no change if nothing to select */
 	if(this.hasPage != 'splash')
 	{
 		if(KeyHandler.hasSubView)
@@ -248,8 +325,8 @@ KeyHandler.changeView = function(page, view, subview, force) {
 				$('#menudeparrPage').removeClass('active');
 			}
 			
-			//$('DIV.navButton[id!=menu' + this.hasPage+']').removeClass('active');
-			//$('DIV.navButton[id=menu' + this.hasPage+']').addClass('active');
+			//$('div.navButton[id!=menu' + this.hasPage+']').removeClass('active');
+			//$('div.navButton[id=menu' + this.hasPage+']').addClass('active');
 			
 			if(page == 'homePage')
 			{
@@ -291,7 +368,10 @@ KeyHandler.changeView = function(page, view, subview, force) {
 					$(body).removeClass(this.prevSubView[this.prevSubView.length-1][1]);
 				}
 			}
-			$(body).addClass(subview);
+			if(subview)
+			{
+				$(body).addClass(subview);
+			}
 		}
 
 		Nav.init();
@@ -304,12 +384,19 @@ KeyHandler.block = function(b) {
 };
 
 
-KeyHandler.processKey = function(key) {
+KeyHandler.processKey = function(key) 
+{
 	try
 	{
-		alert('Key Pressed :: ' + key + ' Page:: ' + this.hasPage + ' View :: ' + this.hasView + ' SubView :: ' + this.hasSubView + ' SelectedId::' + $(Nav.links[Nav.selected]).attr('id') + ' SelectedSubId::' + $(Nav.sublinks[Nav.subselected]).attr('id'));
+
+		if(SS.device == 'philips')
+		{
+			if(key == 27) key = 13;
+		}
+		SS.log('START Key Pressed :: ' + key + '>' + KeyHandler.keyName(key) + ' Page:: ' + KeyHandler.hasPage + ' View :: ' + KeyHandler.hasView + ' SubView :: ' + KeyHandler.hasSubView + ' SelectedId::' + $(Nav.links[Nav.selected]).attr('id') + ' SelectedSubId::' + $(Nav.sublinks[Nav.subselected]).attr('id'));
 		var keycode = key;
-		if( Alert.visible && (keycode == KeyHandler.tvKey.KEY_ENTER || keycode == KeyHandler.tvKey.KEY_RETURN) ){
+		
+		if( Alert.visible && (keycode == 13 || keycode == 461) ){
 			Alert.hide();
 			return false;
 		}
@@ -334,7 +421,6 @@ KeyHandler.processKey = function(key) {
 			}
 			else
 			{
-				
 				switch((this.hasView ? this.hasView : this.hasPage)){
 					case 'mainButtons':
 						Nav.homePage(keycode);
@@ -392,12 +478,108 @@ KeyHandler.processKey = function(key) {
 			}
 		}
 		else {
-			////alert("blocked key: " + keycode);
+			SS.log("blocked key: " + keycode);
 		}
+		SS.log('END Key Pressed :: ' + key + '>' + KeyHandler.keyName(key) + ' Page:: ' + KeyHandler.hasPage + ' View :: ' + KeyHandler.hasView + ' SubView :: ' + KeyHandler.hasSubView + ' SelectedId::' + $(Nav.links[Nav.selected]).attr('id') + ' SelectedSubId::' + $(Nav.sublinks[Nav.subselected]).attr('id'));
 	}
 	catch(e)
 	{
 		Alert.show(e);
 	}
 };
+KeyHandler.initKeys = function()
+{
+	if(SS.device != 'philips') return false;
+	if (window.VK_BACK === undefined) { SS.log('!!! VK_BACK unsuported!!!'); }
+	if (window.VK_UP === undefined) { SS.log('!!! VK_UP unsuported!!!'); }
+	if (window.VK_DOWN === undefined) { SS.log('!!! VK_DOWN unsuported!!!'); }
+	if (window.VK_LEFT === undefined) { SS.log('!!! VK_LEFT unsuported!!!'); }
+	if (window.VK_RIGHT === undefined) { SS.log('!!! VK_RIGHT unsuported!!!'); }
+	if (window.VK_ENTER === undefined) { SS.log('!!! VK_ENTER unsuported!!!'); }
 
+	if (window.VK_RED === undefined) { SS.log('!!! VK_RED unsuported!!!'); }
+    if (window.VK_GREEN === undefined) { SS.log('!!! VK_GREEN unsuported!!!'); }
+    if (window.VK_YELLOW === undefined) { SS.log('!!! VK_YELLOW unsuported!!!'); }
+    if (window.VK_BLUE === undefined) { SS.log('!!! VK_BLUE unsuported!!!'); }
+    if (window.VK_REWIND === undefined) { SS.log('!!! VK_REWIND unsuported!!!'); }
+    if (window.VK_PAUSE === undefined) { SS.log('!!! VK_PAUSE unsuported!!!'); }
+    if (window.VK_FAST_FWD === undefined) { SS.log('!!! VK_FAST_FWD unsuported!!!'); }
+    if (window.VK_PLAY === undefined) { SS.log('!!! VK_PLAY unsuported!!!'); } 
+    if (window.VK_STOP === undefined) { SS.log('!!! VK_STOP unsuported!!!'); }
+	
+    if (window.VK_1 === undefined) { SS.log('!!! VK_1 unsuported!!!'); }
+    if (window.VK_2 === undefined) { SS.log('!!! VK_2 unsuported!!!'); }
+    if (window.VK_3 === undefined) { SS.log('!!! VK_3 unsuported!!!'); }
+    if (window.VK_4 === undefined) { SS.log('!!! VK_4 unsuported!!!'); }
+    if (window.VK_5 === undefined) { SS.log('!!! VK_5 unsuported!!!'); }
+    if (window.VK_6 === undefined) { SS.log('!!! VK_6 unsuported!!!'); }
+    if (window.VK_7 === undefined) { SS.log('!!! VK_7 unsuported!!!'); }
+    if (window.VK_8 === undefined) { SS.log('!!! VK_8 unsuported!!!'); }
+    if (window.VK_9 === undefined) { SS.log('!!! VK_9 unsuported!!!'); }
+    if (window.VK_0 === undefined) { SS.log('!!! VK_0 unsuported!!!'); }
+
+	if (window.VK_BACK === undefined) window.VK_BACK = 98; 
+	if (window.VK_UP === undefined) window.VK_UP = 38;
+	if (window.VK_DOWN === undefined) window.VK_DOWN = 40;
+	if (window.VK_LEFT === undefined) window.VK_LEFT = 37;
+	if (window.VK_RIGHT === undefined) window.VK_RIGHT = 39;
+	if (window.VK_ENTER === undefined) window.VK_ENTER = 13;
+  
+	if (window.VK_RED === undefined) window.VK_RED = 114; 
+    if (window.VK_GREEN === undefined) window.VK_GREEN = 103; 
+    if (window.VK_YELLOW === undefined) window.VK_YELLOW = 121; 
+    if (window.VK_BLUE === undefined) window.VK_BLUE = 98; 
+    if (window.VK_REWIND === undefined) window.VK_REWIND = 0; 
+    if (window.VK_PAUSE === undefined) window.VK_PAUSE = 0; 
+    if (window.VK_FAST_FWD === undefined) window.VK_FAST_FWD = 0; 
+    if (window.VK_PLAY === undefined) window.VK_PLAY = 0; 
+    if (window.VK_STOP === undefined) window.VK_STOP = 0; 
+	
+    if (window.VK_1 === undefined) window.VK_1 = 49; 
+    if (window.VK_2 === undefined) window.VK_2 = 50; 
+    if (window.VK_3 === undefined) window.VK_3 = 51; 
+    if (window.VK_4 === undefined) window.VK_4 = 52; 
+    if (window.VK_5 === undefined) window.VK_5 = 53; 
+    if (window.VK_6 === undefined) window.VK_6 = 54; 
+    if (window.VK_7 === undefined) window.VK_7 = 55; 
+    if (window.VK_8 === undefined) window.VK_8 = 56; 
+    if (window.VK_9 === undefined) window.VK_9 = 57; 
+    if (window.VK_0 === undefined) window.VK_0 = 48; 
+}
+KeyHandler.keyName = function(keyCode)
+{
+	if(SS.device != 'philips') return 'na';
+	switch(keyCode)
+	{
+		case 461: return '461'; break;
+		case 38: return '38'; break;
+		case 40: return '40'; break;
+		case 37: return '37'; break;
+		case 39: return '39'; break;
+		case 13: return '13'; break;
+  
+		case 403: return '403'; break;
+		case 404: return '404'; break; 
+		case 405: return '405'; break;
+		case 406: return '406'; break;
+		case 412: return '412'; break;
+		case 19: return '19'; break;
+		case 417: return '417'; break;
+		case 415: return '415'; break;
+		case 413: return '413'; break;
+	
+		case 49: return '49'; break;
+		case 50: return '50'; break;
+		case 51: return '51'; break; 
+		case 52: return '52'; break;
+		case 53: return '53'; break;
+		case 54: return '54'; break; 
+		case 55: return '55'; break;
+		case 56: return '56'; break; 
+		case 57: return '57'; break; 
+		case 48: return '48'; break; 
+                case HASH(0x861f120): return 'HASH(0x861f120)';break;
+		default:
+			return 'UNKNOWN'; break;
+	}
+};

@@ -1,20 +1,20 @@
-Nav.stationChooserPage = function(keycode)
+Nav.stationChooserPage = function(key)
 {
-	switch(keycode)
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			Nav.iterateLinks('prev');
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			Nav.iterateLinks('prev');
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			var selLink = $(this.links[this.selected]);
 			
 			var code = selLink.attr('id');
@@ -27,27 +27,27 @@ Nav.stationChooserPage = function(keycode)
 			break;
 	}
 }
-Nav.recentDepArr = function(keycode)
+Nav.recentDepArr = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	//Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			Nav.iterateLinks('prev');
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('up',false,3))
 			{
 				KeyHandler.changeView('deparrPage','deparrSearch');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('down',false,3);
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			var selLink = $(this.links[this.selected]);
 			Nav.goRecentStation(selLink);
 			break;
@@ -55,24 +55,24 @@ Nav.recentDepArr = function(keycode)
 			break;
 	}
 }
-Nav.deparrPage = function(keycode)
+Nav.deparrPage = function(key)
 {
-	Nav.generic(keycode);
-	switch(keycode)
+	Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			KeyHandler.changeView('deparrPage','header');
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			KeyHandler.changeView('deparrPage','recentDepArr');
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			Nav.iterateLinks('prev');	
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			switch($(this.links[this.selected]).attr('id'))
 			{
 				case 'btnLiveArrivals':
@@ -92,11 +92,14 @@ Nav.deparrPage = function(keycode)
 Nav.resetDepArrSearch = function()
 {
 	$('#deparrSearch',$('#deparrPage')).find('.link:not(#searchStation)').removeClass('selected, active, lastselected');
-	$('#searchStation').removeClass('clear').attr('code','').find('input:first').val('').addClass('selected');
+	$('#searchStation').removeClass('clear').attr('data-code','').find('input:first').val('').addClass('selected');
+	
+	$('div.inputClick',$('#searchStation')).html('');
 }
 Nav.goRecentStation = function(selLink)
 {
-	$('#searchStation').addClass('clear').attr('code',selLink.attr('code')).find('input:first').val($('.station > h2',selLink).html());
+	$('#searchStation').addClass('clear').attr('data-code',selLink.attr('data-code')).find('input:first').val($('.station > h2',selLink).html());
+	$('div.inputClick',$('#searchStation')).html($('.station > h2',selLink).html());
 
 	if(selLink.attr('arrival')=='true')
 	{
@@ -114,24 +117,30 @@ Nav.searchArrivals = function()
 {
 	if($('input',$('#searchStation')).val() == '')
 	{
-		alert('???')
+		//SS.log('???')
 		Alert.show('Please choose station');
 		return false;
 	}
 	
-	//alert('search arrivals');
-	if((!$('#searchStation').attr('code') || $('#searchStation').attr('code') == '') && $('input',$('#searchStation')).val() != '')
+	//SS.log('search arrivals');
+	if((!$('#searchStation').attr('data-code') || $('#searchStation').attr('data-code') == '') && $('input',$('#searchStation')).val() != '')
 	{
 		NRE.findStation($('input',$('#searchStation')).val(),function(data){
 			var list = Loader.stationSearch(data);
 			if(list=='')
 			{
-				Alert.show('Can not find any matching stations for "'+$('input',$('#searchStation')).val()+'". Please try with different keywords.')
+				var srch = $('input',$('#searchStation')).val();
+				if(srch.length >= 35)
+				{
+					srch = srch.substring(0,31)+' ...';
+				}
+				Alert.show('Can not find any matching stations for "'+srch+'". Please try with different keywords.')
 				return false;
 			}
 			$('#stChTable').html(list).data('callback',function(code,text){
-				$('#searchStation').attr('code',code);
+				$('#searchStation').attr('data-code',code);
 				$('input',$('#searchStation')).val(text)
+				$('div.inputClick',$('#searchStation')).html(text);
 				Nav.searchArrivals();
 			});
 			KeyHandler.changeView('stationChooserPage','stChTable');
@@ -142,16 +151,16 @@ Nav.searchArrivals = function()
 		});
 	}
 	
-	if(!$('#searchStation').attr('code') || $('#searchStation').attr('code') == '')
+	if(!$('#searchStation').attr('data-code') || $('#searchStation').attr('data-code') == '')
 	{
 		//Alert.show('Please choose station');
 		return false;
 	}
 	else
 	{
-		RecentSaved.save('deparrSearch',{'from':{'code':$('#searchStation').attr('code'),'text':$('input',$('#searchStation')).val()},'arrival':true});
+		RecentSaved.save('deparrSearch',{'from':{'code':$('#searchStation').attr('data-code'),'text':$('input',$('#searchStation')).val()},'arrival':true});
 		
-		NRE.GetArrivalBoard($('#searchStation').attr('code'),function(xmlDoc){
+		NRE.GetArrivalBoard($('#searchStation').attr('data-code'),function(xmlDoc){
 			var list = Loader.ArrivalBoard(xmlDoc);
 			$('#arrivalTable').html(list);
 			KeyHandler.changeView('arrivalsPage','arrivalTable');
@@ -168,18 +177,24 @@ Nav.searchDepartures = function()
 		return false;
 	}
 	
-	if((!$('#searchStation').attr('code') || $('#searchStation').attr('code') == '') && $('input',$('#searchStation')).val() != '')
+	if((!$('#searchStation').attr('data-code') || $('#searchStation').attr('data-code') == '') && $('input',$('#searchStation')).val() != '')
 	{
 		NRE.findStation($('input',$('#searchStation')).val(),function(data){
 			var list = Loader.stationSearch(data);
 			if(list=='')
 			{
-				Alert.show('Can not find any matching stations for "'+$('input',$('#searchStation')).val()+'". Please try with different keywords.')
+				var srch = $('input',$('#searchStation')).val();
+				if(srch.length >= 35)
+				{
+					srch = srch.substring(0,31)+' ...';
+				}
+				Alert.show('Can not find any matching stations for "'+srch+'". Please try with different keywords.')
 				return false;
 			}
 			$('#stChTable').html(list).data('callback',function(code,text){
-				$('#searchStation').attr('code',code);
-				$('input',$('#searchStation')).val(text)
+				$('#searchStation').attr('data-code',code);
+				$('input',$('#searchStation')).val(text);
+				$('div.inputClick',$('#searchStation')).html(text);
 				Nav.searchDepartures();
 			});
 			KeyHandler.changeView('stationChooserPage','stChTable');
@@ -190,18 +205,18 @@ Nav.searchDepartures = function()
 		});
 	}
 	
-	if(!$('#searchStation').attr('code') || $('#searchStation').attr('code') == '')
+	if(!$('#searchStation').attr('data-code') || $('#searchStation').attr('data-code') == '')
 	{
 		//Alert.show('Please choose station');
 		return false;
 	}
 	else
 	{
-		RecentSaved.save('deparrSearch',{'from':{'code':$('#searchStation').attr('code'),'text':$('input',$('#searchStation')).val()},'departure':true});
+		RecentSaved.save('deparrSearch',{'from':{'code':$('#searchStation').attr('data-code'),'text':$('input',$('#searchStation')).val()},'departure':true});
 		
-		NRE.GetDepartureBoard($('#searchStation').attr('code'),function(xmlDoc){
+		NRE.GetDepartureBoard($('#searchStation').attr('data-code'),function(xmlDoc){
 			var list = Loader.DepartureBoard(xmlDoc);
-			//alert(list)
+			//SS.log(list)
 			$('#departureTable').html(list);
 			KeyHandler.changeView('departurePage','departureTable');
 			//Scroller.init('departureTable');

@@ -1,39 +1,59 @@
-Nav.autoComplete = function(keycode)
+Nav.autoComplete = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	SS.log('Go into autocomplete ::' + key);
+	
+	//Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_1:
-		case KeyHandler.tvKey.KEY_2:
-		case KeyHandler.tvKey.KEY_3:
-		case KeyHandler.tvKey.KEY_4:
-		case KeyHandler.tvKey.KEY_5:
-		case KeyHandler.tvKey.KEY_6:
-		case KeyHandler.tvKey.KEY_7:
-		case KeyHandler.tvKey.KEY_8:
-		case KeyHandler.tvKey.KEY_9:
-		case KeyHandler.tvKey.KEY_0:
-		case KeyHandler.tvKey.KEY_PRECH:
+		case 49:
+		case 50:
+		case 51:
+		case 52:
+		case 53:
+		case 54:
+		case 55:
+		case 56:
+		case 57:
+		case 48:
+		//case 259: //KeyHandler.tvKey.KEY_PRECH:
 			KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView,'keypad');
-			Nav.keypad(keycode);
+			Nav.keypad(key);
 			break;
-		case KeyHandler.tvKey.KEY_UP:
-			Nav.iterateLinks('prev');	
+		case 38:
+			if(!Nav.iterateLinks('prev'))
+			{
+				KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView,'keypad');
+			}	
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
-			$(this.links[this.selected]).attr('code',$(this.sublinks[this.subselected]).attr('code')).children('input')
+		case 461:
+			if(SS.device != 'philips')
+			{
+				SS.log('Autocomplete KEY_RETURN');
+				Autocomplete.hide($(Nav.links[Nav.selected]));
+				Utils.Keypad(false);
+				$('#autoComplete').hide();
+			}			
+			break;
+		case 13:
+			
+			SS.log('Autocomplete ENTER');
+		
+			$(this.links[this.selected]).attr('data-code',$(this.sublinks[this.subselected]).attr('data-code')).children('input')
 			.val($(this.sublinks[this.subselected]).attr('text'));
+			
+			$('div.inputClick',$(this.links[this.selected])).html($(this.sublinks[this.subselected]).attr('text'));
 			//$('#autoComplete').hide();//
 			Autocomplete.hide($(Nav.links[Nav.selected]));
 			Utils.Keypad(false);
 			$('#autoComplete').hide();
+			$('#toStation').show();
 			break;
 		default:
 			break;

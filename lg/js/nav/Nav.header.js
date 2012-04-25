@@ -1,11 +1,11 @@
-Nav.header = function(keycode)
+Nav.header = function(key)
 {
-	Nav.generic(keycode);
-	switch(keycode)
+	Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			switch(KeyHandler.hasPage)
 			{
 				case 'journeyPage':
@@ -34,13 +34,13 @@ Nav.header = function(keycode)
 			}
 			
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			Nav.iterateLinks('prev');	
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			Nav.iterateLinks('next');
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			var selLink = $(this.links[this.selected]);
 			switch(selLink.attr('id'))
 			{
@@ -56,32 +56,32 @@ Nav.header = function(keycode)
 					break;
 			}
 			break;
-		case KeyHandler.tvKey.KEY_GREEN:
-		case KeyHandler.tvKey.KEY_YELLOW:
-		case KeyHandler.tvKey.KEY_RED:
-		case KeyHandler.tvKey.KEY_BLUE:
+		case 404:
+		case 405:
+		case 403:
+		case 406:
 			switch(KeyHandler.hasPage)
 			{
 				case 'journeyPage':
-					Nav.journeyPage(keycode);
+					Nav.journeyPage(key);
 					break;
 				case 'deparrPage':
-					Nav.deparrPage(keycode);
+					Nav.deparrPage(key);
 					break;
 				case 'departurePage':
-					Nav.departurePage(keycode);
+					Nav.departurePage(key);
 					break;
 				case 'arrivalsPage':
-					Nav.arrivalPage(keycode);
+					Nav.arrivalPage(key);
 					break;
 				case 'departureDetPage':
-					Nav.departureDetTable(keycode);
+					Nav.departureDetTable(key);
 					break;
 				case 'journeyResPage':
-					Nav.journeyResPage(keycode);
+					Nav.journeyResPage(key);
 					break;
 				case 'journeyResDetPage':
-					Nav.journeyResDetTable(keycode);
+					Nav.journeyResDetTable(key);
 					break;
 				case '':
 					break;

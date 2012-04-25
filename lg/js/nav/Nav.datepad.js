@@ -1,6 +1,6 @@
-Nav.datepad = function(keycode)
+Nav.datepad = function(key)
 {
-	//Nav.generic(keycode);
+	//Nav.generic(key);
 	
 	/*
 	var newEvent = document.createEvent('KeyboardEvent');
@@ -13,7 +13,7 @@ Nav.datepad = function(keycode)
                   false,            //  in boolean altKeyArg,                                                        
                   false,            //  in boolean shiftKeyArg,                                                      
                   false,            //  in boolean metaKeyArg,                                                       
-                   keycode,               //  in unsigned long keyCodeArg,                                                      
+                   key,               //  in unsigned long keyCodeArg,                                                      
                    0);              //  in unsigned long charCodeArg); 
 				   
 	 $('#datePicker .sf-ui-sfDatepicker_a')[0].dispatchEvent(newEvent);
@@ -22,20 +22,27 @@ Nav.datepad = function(keycode)
 //   document.getElementById('myjavaapplet').dispatchEvent(newEvent);
 	
 	//$("#datePicker").sfDatepickerKeyEvent();
-	switch(keycode)
+	
+	var field = $(Nav.links[Nav.selected]);
+	var fieldId = field.attr('id');
+	
+	SS.log('fieldId::' + fieldId);
+	var dp = Utils.Datepads[fieldId];
+	dp.keydown(null,key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			//Utils.DatePad(false);		
 			break;
-		case KeyHandler.tvKey.KEY_RETURN:
+		case 461:
 			//Utils.DatePad(false);	
 			break;
 		default:

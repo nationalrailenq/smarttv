@@ -95,7 +95,7 @@ Loader.ArrivalBoard = function(xmlDoc)
 				m_class += (((onTime.toString().indexOf("minutes late")>0) || (onTime.toString().indexOf("minutes early")>0)) ? ' twoLine' : '');
 				m_class += ((late==true || (onTime.toString().indexOf("early")>0)) ? ' minuteStatus' : '');
 				
-				result += '<ul id="arrBordlink'+count+'" class="link'+m_class+'" serviceID="'+serviceID+'" name="'+originName+'" tabindex="'+count+'"><li class="col1"><h2>'+sta+'</h2></li><li class="col2"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+originName + (via != '' ? ' ' + via: '') + (circular ? ' (circular route)' : '')+'</h2></td></tr></table></li><li class="col3"><h2>'+onTime+'</h2></li><li class="col4"><h2>'+platform+'</h2></li><li class="col5"></li></ul>';
+				result += '<ul id="arrBordlink'+count+'" class="link'+m_class+'" serviceID="'+serviceID+'" name="'+originName+'" data-tabindex="'+count+'"><li class="col1"><h2>'+sta+'</h2></li><li class="col2"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+originName + (via != '' ? ' ' + via: '') + (circular ? ' (circular route)' : '')+'</h2></td></tr></table></li><li class="col3">'+onTime+'</li><li class="col4"><h2>'+platform+'</h2></li><li class="col5"></li></ul>';
 				count++;
 			});
 		});
@@ -162,7 +162,7 @@ Loader.DepartureBoard = function(xmlDoc) {
 				m_class += (((onTime.toString().indexOf("minutes late")>0) || (onTime.toString().indexOf("minutes early")>0)) ? ' twoLine' : '');
 				m_class += ((late==true || (onTime.toString().indexOf("early")>0)) ? ' minuteStatus' : '');
 				
-				result += '<ul id="depBordlink'+count+'" class="link'+m_class+'" serviceID="'+serviceID+'" name="'+destinationName+'" tabindex="'+count+'"><li class="col1"><h2>'+std+'</h2></li><li class="col2"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>' +destinationName + (via != '' ? ' ' + via: '') + (circular ? ' (circular route)' : '')+'</h2></td></tr></table></li><li class="col3">'+onTime+'</li><li class="col4"><h2>'+platform+'</h2></li><li class="col5"></li></ul>';
+				result += '<ul id="depBordlink'+count+'" class="link'+m_class+'" serviceID="'+serviceID+'" name="'+destinationName+'" data-tabindex="'+count+'"><li class="col1"><h2>'+std+'</h2></li><li class="col2"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>' +destinationName + (via != '' ? ' ' + via: '') + (circular ? ' (circular route)' : '')+'</h2></td></tr></table></li><li class="col3">'+onTime+'</li><li class="col4"><h2>'+platform+'</h2></li><li class="col5"></li></ul>';
 				count++;
 			});
 		});
@@ -177,15 +177,17 @@ Loader.DepartureBoard = function(xmlDoc) {
 Loader.ServiceDetails = function (xmlDoc) {
 	try
 	{
-		//alert('document:::' + xmlDoc);
-		
+		//SS.log('document:::' + xmlDoc);
+
+		try
+		{
 		if(!xmlDoc.documentElement.getElementsByTagName('GetServiceDetailsResponse')[0].firstChild)
 		{
-			alert('API Error::' + 'No Service details');
+			SS.log('API Error::' + 'No Service details');
 			return '<ul class="error"><li>No Service detail for current journey.</li></ul>';
 			//return false;
 		}
-		
+		}catch(e){}
 		var previousCallingPoints = xmlDoc.documentElement.getElementsByTagName("previousCallingPoints");
 		var subsequentCallingPoints = xmlDoc.documentElement.getElementsByTagName("subsequentCallingPoints");
 		this.reported = false;
@@ -200,7 +202,7 @@ Loader.ServiceDetails = function (xmlDoc) {
 		else if (xmlDoc.documentElement.getElementsByTagName("atd").length > 0) eta = xmlDoc.documentElement.getElementsByTagName("etd")[0].firstChild.nodeValue;
 		var platform = '';
 		var platformXML = xmlDoc.getElementsByTagName("platform");
-		//alert('Platform:::' + platformXML.length + '>>' + platformXML.length)
+		//SS.log('Platform:::' + platformXML.length + '>>' + platformXML.length)
 		if (platformXML.length > 0)
 			platform = platformXML[0].firstChild.nodeValue;
 				
@@ -214,6 +216,10 @@ Loader.ServiceDetails = function (xmlDoc) {
 			if (eta[0] != undefined) {
 				late = Utils.GetTimeLate(sta, eta);
 				onTime = Utils.getTimeState(sta, eta, late)
+			}
+			else
+			{
+				onTime = '<h2>' + onTime + '</h2>';
 			}
 	
 			var m_class = ((eta=="Cancelled" || eta=="Delayed" || late==true) ? ' red' : '');
@@ -234,7 +240,7 @@ Loader.ServiceDetails = function (xmlDoc) {
 	
 		var lastReported = null;
 		$('ul',ret).each(function(i){
-			$(this).attr('tabindex',i);
+			$(this).attr('data-tabindex',i);
 			var gTime = new Date();
 			var tm = $(this).find('li.col1:first > h2').html()
 			if($(this).find('li.col3:first > h2').html())
@@ -247,7 +253,7 @@ Loader.ServiceDetails = function (xmlDoc) {
 				gTime.setHours(parseInt( tm.split(':')[0] ));
 				gTime.setMinutes(parseInt( tm.split(':')[1] ));		
 			}
-			//alert(tm + '>>' + gTime + '>>' + now);
+			//SS.log(tm + '>>' + gTime + '>>' + now);
 			if(gTime.getTime()<=now.getTime())
 			{
 				lastReported = $(this);
@@ -314,36 +320,79 @@ Loader.RealtimeJourneyPlan = function(xmlDoc,ident) {
 	try
 	{
 		Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident] = [];
-		var error = xmlDoc.documentElement.getElementsByTagName("RealtimeJourneyPlanFault");//$(xmlDoc).find("RealtimeJourneyPlanFault");
+		var error;
+		if(SS.device == 'samsung')
+		{
+			error = xmlDoc.documentElement.getElementsByTagName("ns2:RealtimeJourneyPlanFault");//$(xmlDoc).find("RealtimeJourneyPlanFault");
+		}else
+		{
+			error = xmlDoc.documentElement.getElementsByTagName("RealtimeJourneyPlanFault");//$(xmlDoc).find("RealtimeJourneyPlanFault");
+		}
 		if(error.length > 0)
 		{
-			return '<ul class="error"><li>'+error[0].getElementsByTagName("responseDetails")[0].firstChild.nodeValue+'</li></ul>';
+			if(SS.device == 'samsung')
+			{
+				return '<ul class="error"><li>'+error[0].getElementsByTagName("ns3:responseDetails")[0].firstChild.nodeValue+'</li></ul>';
+			}
+			else
+			{
+				return '<ul class="error"><li>'+error[0].getElementsByTagName("responseDetails")[0].firstChild.nodeValue+'</li></ul>';
+			}
 		}
 		
-		var service = xmlDoc.documentElement.getElementsByTagName("outwardJourney");	
+		var service;
+		if(SS.device == 'samsung'){
+			service = xmlDoc.documentElement.getElementsByTagName("ns2:outwardJourney");	
+		}else {
+ 			service = xmlDoc.documentElement.getElementsByTagName("outwardJourney");
+		}	
 		var start_Date = null;
 		var result = "";
 		var oddplus = 0;
 		for (var i = 0; i < service.length; i++) {
 			Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i] = [];
-			var realtimeClassification = service[i].getElementsByTagName("realtimeClassification")[0].firstChild.nodeValue;
-			var departure = service[i].getElementsByTagName("timetable")[0].getElementsByTagName("departure")[0].firstChild.nodeValue;
-			var arrival = service[i].getElementsByTagName("timetable")[0].getElementsByTagName("arrival")[0].firstChild.nodeValue;
-			var originPlatform = 3;//service[i].getElementsByTagName("leg")[0].getElementsByTagName("originPlatform")[0].firstChild.nodeValue;
-			var leg = service[i].getElementsByTagName("leg");
+			if(SS.device == 'samsung')
+			{
+				var realtimeClassification = service[i].getElementsByTagName("ns2:realtimeClassification")[0].firstChild.nodeValue;
+				var departure = service[i].getElementsByTagName("ns2:timetable")[0].getElementsByTagName("ns2:departure")[0].firstChild.nodeValue;
+				var arrival = service[i].getElementsByTagName("ns2:timetable")[0].getElementsByTagName("ns2:arrival")[0].firstChild.nodeValue;
+				var originPlatform = 3;//service[i].getElementsByTagName("ns2:leg")[0].getElementsByTagName("ns2:originPlatform")[0].firstChild.nodeValue;
+				var leg = service[i].getElementsByTagName("ns2:leg");
+			}else{
+				var realtimeClassification = service[i].getElementsByTagName("realtimeClassification")[0].firstChild.nodeValue;
+				var departure = service[i].getElementsByTagName("timetable")[0].getElementsByTagName("departure")[0].firstChild.nodeValue;
+				var arrival = service[i].getElementsByTagName("timetable")[0].getElementsByTagName("arrival")[0].firstChild.nodeValue;
+				var originPlatform = 3;//service[i].getElementsByTagName("leg")[0].getElementsByTagName("originPlatform")[0].firstChild.nodeValue;
+				var leg = service[i].getElementsByTagName("leg");
+			}
 			
 			for(j=0;j<leg.length;j++)
 			{
 				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j] = new Object();
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].id = leg[j].getElementsByTagName("id")[0].firstChild.nodeValue;
-				
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].origin = leg[j].getElementsByTagName("board")[0].getElementsByTagName("crsCode")[0].firstChild.nodeValue;
-				
-				if(leg[j].getElementsByTagName("undergroundTravelInformation").length > 0
-				&& leg[j].getElementsByTagName("undergroundTravelInformation")[0].getElementsByTagName("message")[0].firstChild)
+				if(SS.device == 'samsung')
 				{
-					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].undergroundTravelInformation = leg[j].getElementsByTagName("undergroundTravelInformation")[0].getElementsByTagName("message")[0].firstChild.nodeValue;
-
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].id = leg[j].getElementsByTagName("ns2:id")[0].firstChild.nodeValue;
+				
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].origin = leg[j].getElementsByTagName("ns2:board")[0].getElementsByTagName("ns2:crsCode")[0].firstChild.nodeValue;
+				
+					if(leg[j].getElementsByTagName("ns2:undergroundTravelInformation").length > 0
+					&& leg[j].getElementsByTagName("ns2:undergroundTravelInformation")[0].getElementsByTagName("ns3:message")[0].firstChild)
+					{
+						Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].undergroundTravelInformation = leg[j].getElementsByTagName("ns2:undergroundTravelInformation")[0].getElementsByTagName("ns3:message")[0].firstChild.nodeValue;
+					}
+	
+				}
+				else
+				{			
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].id = leg[j].getElementsByTagName("id")[0].firstChild.nodeValue;
+				
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].origin = leg[j].getElementsByTagName("board")[0].getElementsByTagName("crsCode")[0].firstChild.nodeValue;
+				
+					if(leg[j].getElementsByTagName("undergroundTravelInformation").length > 0
+					&& leg[j].getElementsByTagName("undergroundTravelInformation")[0].getElementsByTagName("message")[0].firstChild)
+					{
+						Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].undergroundTravelInformation = leg[j].getElementsByTagName("undergroundTravelInformation")[0].getElementsByTagName("message")[0].firstChild.nodeValue;
+					}
 				}
 				
 				/*
@@ -356,8 +405,14 @@ Loader.RealtimeJourneyPlan = function(xmlDoc,ident) {
 				);
 				*/
 	
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].destination = leg[j].getElementsByTagName("alight")[0].getElementsByTagName("crsCode")[0].firstChild.nodeValue;;
-				
+				if(SS.device == 'samsung')
+				{			
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].destination = leg[j].getElementsByTagName("ns2:alight")[0].getElementsByTagName("ns2:crsCode")[0].firstChild.nodeValue;
+				}
+				else
+				{
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].destination = leg[j].getElementsByTagName("alight")[0].getElementsByTagName("crsCode")[0].firstChild.nodeValue;
+				}				
 				/*
 				Loader.getFullNameForCode(
 					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].destination,
@@ -367,41 +422,83 @@ Loader.RealtimeJourneyPlan = function(xmlDoc,ident) {
 					}
 				);
 				*/
-				
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].mode = leg[j].getElementsByTagName("mode")[0].firstChild.nodeValue;
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].departure = leg[j].getElementsByTagName("timetable")[0].getElementsByTagName("departure")[0].firstChild.nodeValue;
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].arrival = leg[j].getElementsByTagName("timetable")[0].getElementsByTagName("arrival")[0].firstChild.nodeValue;
-				Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].realtimeClassification = leg[j].getElementsByTagName("realtimeClassification")[0].firstChild.nodeValue;
+				if(SS.device == 'samsung')
+				{
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].mode = leg[j].getElementsByTagName("ns2:mode")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].departure = leg[j].getElementsByTagName("ns2:timetable")[0].getElementsByTagName("ns2:departure")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].arrival = leg[j].getElementsByTagName("ns2:timetable")[0].getElementsByTagName("ns2:arrival")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].realtimeClassification = leg[j].getElementsByTagName("ns2:realtimeClassification")[0].firstChild.nodeValue;
+				}
+				else
+				{				
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].mode = leg[j].getElementsByTagName("mode")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].departure = leg[j].getElementsByTagName("timetable")[0].getElementsByTagName("departure")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].arrival = leg[j].getElementsByTagName("timetable")[0].getElementsByTagName("arrival")[0].firstChild.nodeValue;
+					Loader.RealtimeJourneyPlanDetails['jpBordlink'+ident][i][j].realtimeClassification = leg[j].getElementsByTagName("realtimeClassification")[0].firstChild.nodeValue;
+				}
 			}
 			
-			var serviceBulletins = service[i].getElementsByTagName("serviceBulletins");
+			if(SS.device == 'samsung')
+			{
+				var serviceBulletins = service[i].getElementsByTagName("ns2:serviceBulletins");
+			}
+			else
+			{
+				var serviceBulletins = service[i].getElementsByTagName("serviceBulletins");
+			}
 			var jsonSrvBul = new Object()
 			
 			
 			
 			if(serviceBulletins.length>0)
 			{
-				//alert('VVVVVV::'+serviceBulletins.length + '>>>' + serviceBulletins[0].getElementsByTagName("title").length)
-				jsonSrvBul.title = serviceBulletins[0].getElementsByTagName("title")[0].firstChild.nodeValue;
-				if(serviceBulletins[0].getElementsByTagName("description").length > 0)
+				if(SS.device == 'samsung')
 				{
-					if(serviceBulletins[0].getElementsByTagName("description")[0].firstChild)
+					//SS.log('VVVVVV::'+serviceBulletins.length + '>>>' + serviceBulletins[0].getElementsByTagName("ns2:title").length)
+					jsonSrvBul.title = serviceBulletins[0].getElementsByTagName("ns3:title")[0].firstChild.nodeValue;
+					if(serviceBulletins[0].getElementsByTagName("ns3:description").length > 0)
 					{
-						jsonSrvBul.description = serviceBulletins[0].getElementsByTagName("description")[0].firstChild.nodeValue;
+						if(serviceBulletins[0].getElementsByTagName("ns3:description")[0].firstChild)
+						{
+							jsonSrvBul.description = serviceBulletins[0].getElementsByTagName("ns3:description")[0].firstChild.nodeValue;
+						}
+						else
+						{
+							jsonSrvBul.description = jsonSrvBul.title;
+						}
 					}
-					else
-					{
-						jsonSrvBul.description = jsonSrvBul.title;
-					}
-						
+
 				}
 				else
 				{
-					jsonSrvBul.description = jsonSrvBul.title;
+					//SS.log('VVVVVV::'+serviceBulletins.length + '>>>' + serviceBulletins[0].getElementsByTagName("title").length)
+					jsonSrvBul.title = serviceBulletins[0].getElementsByTagName("title")[0].firstChild.nodeValue;
+					if(serviceBulletins[0].getElementsByTagName("description").length > 0)
+					{
+						if(serviceBulletins[0].getElementsByTagName("description")[0].firstChild)
+						{
+							jsonSrvBul.description = serviceBulletins[0].getElementsByTagName("description")[0].firstChild.nodeValue;
+						}
+						else
+						{
+							jsonSrvBul.description = jsonSrvBul.title;
+						}
+					}
+						
 				}
-				jsonSrvBul.disruption = serviceBulletins[0].getElementsByTagName("disruption")[0].firstChild.nodeValue;
-				jsonSrvBul.alert = serviceBulletins[0].getElementsByTagName("alert")[0].firstChild.nodeValue;
-				jsonSrvBul.cleared = serviceBulletins[0].getElementsByTagName("cleared")[0].firstChild.nodeValue;
+				
+				if(SS.device == 'samsung')
+				{
+					jsonSrvBul.disruption = serviceBulletins[0].getElementsByTagName("ns3:disruption")[0].firstChild.nodeValue;
+					jsonSrvBul.alert = serviceBulletins[0].getElementsByTagName("ns3:alert")[0].firstChild.nodeValue;
+					jsonSrvBul.cleared = serviceBulletins[0].getElementsByTagName("ns3:cleared")[0].firstChild.nodeValue;
+				}
+				else
+				{
+					jsonSrvBul.disruption = serviceBulletins[0].getElementsByTagName("disruption")[0].firstChild.nodeValue;
+					jsonSrvBul.alert = serviceBulletins[0].getElementsByTagName("alert")[0].firstChild.nodeValue;
+					jsonSrvBul.cleared = serviceBulletins[0].getElementsByTagName("cleared")[0].firstChild.nodeValue;
+				}
 			}
 			
 			var tempDate = Utils.stringToDate(departure.split('T')[0]+" 00:00:00");
@@ -431,13 +528,13 @@ Loader.RealtimeJourneyPlan = function(xmlDoc,ident) {
 				result +='<ul class="date '+( (i+oddplus)%2==0 ? 'odd' : 'even' )+'"><li><h2>'+Utils.dayNames[tempDate.getDay()]+' '+tempDate.getDate()+' of '+Utils.monthNames[tempDate.getMonth()]+'</h2></li></ul>';
 				oddplus += 1;
 			}
-			//alert('realtimeClassification' + realtimeClassification);
+			//SS.log('realtimeClassification' + realtimeClassification);
 			//if(realtimeClassification=="NORMAL")
 			//{
 				
-				//alert(JSON.stringify(jsonSrvBul));
+				SS.log(JSON.stringify(jsonSrvBul));
 				
-				result += '<ul id="jpBordlink'+ident+'_'+i+'" class="link '+( (i+oddplus)%2==0 ? 'odd' : 'even' )+'" tabindex="'+i+'" jsonSrvBul="'+(serviceBulletins.length>0?escape(JSON.stringify(jsonSrvBul)):'')+'"><li class="col1"><h2>'+time_1+'</h2></li><li class="col2"><h2>'+time_2+'</h2></li><li class="col3"><h2>'+(leg.length-1)+'</h2></li><li class="col4"><h2>'+originPlatform+'</h2></li><li class="col5"><h2>'+durr+'</h2></li><li class="col6 '+realtimeClassification+(serviceBulletins.length>0?' ATENTION':'')+'"></li></ul>';
+				result += '<ul id="jpBordlink'+ident+'_'+i+'" class="link '+( (i+oddplus)%2==0 ? 'odd' : 'even' )+'" data-tabindex="'+i+'" data-jsonSrvBul="'+(serviceBulletins.length>0?escape(JSON.stringify(jsonSrvBul)):'')+'"><li class="col1"><h2>'+time_1+'</h2></li><li class="col2"><h2>'+time_2+'</h2></li><li class="col3"><h2>'+(leg.length-1)+'</h2></li><li class="col4"><h2>'+originPlatform+'</h2></li><li class="col5"><h2>'+durr+'</h2></li><li class="col6 '+realtimeClassification+(serviceBulletins.length>0?' ATENTION':'')+'"></li></ul>';
 			//<ul class='selected red'><li class='c1'>"+time_1+"</li><li class='c2'>"+time_2+"</li><li class='c3'>"+(leg.length-1)+"</li><li class='c4'>"+originPlatform+"</li><li class='c5'>"+diff+"</li></ul>   
 				//result += Utils.format(data, time_1, time_2, (leg.length-1), originPlatform, diff);
 			//}
@@ -496,12 +593,18 @@ Loader.RealtimeJourneyPlanDet = function(json,jsonSrvBul)
 {
 	try
 	{
+		/*
+		var msg = new Object();
 		if(jsonSrvBul!=null)
 		{
-			var msg = $.parseJSON(unescape(jsonSrvBul));
+			var jsStr = unescape(jsonSrvBul);
+			var msg = $.parseJSON(jsStr);
+			SS.log(msg);
 		}
+		*/
 		result = '';
 		$.each(json,function(key,legOb){
+			SS.log(legOb)
 			//messages needed
 			var dtDep = Utils.stringToDateNRE(legOb.departure);
 			var dtArr = Utils.stringToDateNRE(legOb.arrival);
@@ -515,7 +618,7 @@ Loader.RealtimeJourneyPlanDet = function(json,jsonSrvBul)
 			legOb.mode = legOb.mode.substring(0,1).toUpperCase() + legOb.mode.toLowerCase().substring(1);
 			legOb.mode = legOb.mode.replace('_',' ');
 			
-			result += '<ul id="jpDetBordlink'+legOb.id+'" class="link" tabindex="'+key+'" ungrd="'+(undergroundTravel?undergroundTravel:'')+'" jsonSrvBul="'+(jsonSrvBul!=null?jsonSrvBul:'')+'"><li class="col1"><h2>'+legOb.mode+'</h2></li><li class="col2"><h2>'+dtDep.format('HH:MM')+'</h2></li><li class="col3"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+legOb.origin+'</h2></td></tr></table></li><li class="col4"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+legOb.destination+'</h2></td></tr></table></li><li class="col5"><h2>'+dtArr.format('HH:MM')+'</h2></li><li class="col6 '+legOb.realtimeClassification+(undergroundTravel || jsonSrvBul!=null?' ATENTION':'')+'"><h2>'+durr + '</h2></li></ul>';
+			result += '<ul id="jpDetBordlink'+legOb.id+'" class="link" data-tabindex="'+key+'" ungrd="'+(undergroundTravel?undergroundTravel:'')+'" data-jsonSrvBul="'+(jsonSrvBul!=null?jsonSrvBul:'')+'"><li class="col1"><h2>'+legOb.mode+'</h2></li><li class="col2"><h2>'+dtDep.format('HH:MM')+'</h2></li><li class="col3"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+legOb.origin+'</h2></td></tr></table></li><li class="col4"><table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"><tr><td valign="middle"><h2>'+legOb.destination+'</h2></td></tr></table></li><li class="col5"><h2>'+dtArr.format('HH:MM')+'</h2></li><li class="col6 '+legOb.realtimeClassification+(undergroundTravel || jsonSrvBul!=null?' ATENTION':'')+'"><h2>'+durr + '</h2></li></ul>';
 			
 		});
 		return result;
@@ -529,7 +632,7 @@ Loader.stationSearch = function(data)
 {
 	try
 	{
-		//alert('got date' + data);
+		//SS.log('got date' + data);
 		var items = [];
 		var count =0;
 		var sugestLimit = 10;
@@ -538,7 +641,7 @@ Loader.stationSearch = function(data)
 			{
 				count++;
 				if(count<sugestLimit){
-					items.push('<ul class="link" id="' + val[0] + '" text="'+val[1]+'" tabindex="'+count+'"><li class="col1"><h2>' + val[1] +' ['+val[0]+']'+ '</h2></li></ul>');
+					items.push('<ul class="link" id="' + val[0] + '" text="'+val[1]+'" data-tabindex="'+count+'"><li class="col1"><h2>' + val[1] +' ['+val[0]+']'+ '</h2></li></ul>');
 				}
 			}
 		});

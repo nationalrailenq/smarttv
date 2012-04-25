@@ -30,6 +30,12 @@ Alert.show = function(msg)
 		}
 	}
 	smsg = smsg.replace(/\(/g,' (').replace(/\)/g,') ').replace(/\[/,' [').replace(/\]/,'] ').replace(/  /,' ');
+	
+	if(smsg.length > 203)
+	{
+		smsg = smsg.substring(0,200) + '...';
+	}
+	
 	$('#alertBoxMsg').find('h1').html(smsg)
 	$('#alertBox').show();
 	this.visible = true;

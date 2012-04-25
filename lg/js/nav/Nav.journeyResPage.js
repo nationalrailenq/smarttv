@@ -1,8 +1,8 @@
-Nav.journeyResEarlierLater = function(keycode)
+Nav.journeyResEarlierLater = function(key)
 {
-	switch(keycode)
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			if(KeyHandler.hasView == 'laterreturn')
 			{
 				KeyHandler.changeView('journeyResPage','lateroutward');
@@ -12,7 +12,7 @@ Nav.journeyResEarlierLater = function(keycode)
 				KeyHandler.changeView('journeyResPage','earlieroutward');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			if(!$('#retTable').hasClass('hidden'))
 			{			
 				if(KeyHandler.hasView == 'lateroutward')
@@ -29,7 +29,7 @@ Nav.journeyResEarlierLater = function(keycode)
 				KeyHandler.changeView('journeyResPage','addReturnView');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(KeyHandler.hasView == 'lateroutward')
 			{
 				KeyHandler.changeView('journeyResPage','outTable');
@@ -43,7 +43,7 @@ Nav.journeyResEarlierLater = function(keycode)
 				KeyHandler.changeView('journeyResPage','header');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			if(KeyHandler.hasView == 'earlieroutward')
 			{
 				KeyHandler.changeView('journeyResPage','outTable');
@@ -53,25 +53,25 @@ Nav.journeyResEarlierLater = function(keycode)
 				KeyHandler.changeView('journeyResPage','retTable');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:			
+		case 13:			
 			Nav.journeyResPageEnter();
 			break;
-		case KeyHandler.tvKey.KEY_GREEN:
-		case KeyHandler.tvKey.KEY_YELLOW:
-		case KeyHandler.tvKey.KEY_RED:
-		case KeyHandler.tvKey.KEY_BLUE:
-			Nav.journeyResPage(keycode);
+		case 404:
+		case 405:
+		case 403:
+		case 406:
+			Nav.journeyResPage(key);
 			break;
 		default:
 			break;
 	}
 }
-Nav.journeyResPage = function(keycode)
+Nav.journeyResPage = function(key)
 {
-	//Nav.generic(keycode);
-	switch(keycode)
+	//Nav.generic(key);
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(KeyHandler.hasView == 'addReturnView')
 			{
 				KeyHandler.changeView('journeyResPage','header');
@@ -88,7 +88,7 @@ Nav.journeyResPage = function(keycode)
 				}
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			if(!Nav.iterateLinks('next'))
 			{
 				if(KeyHandler.hasView == 'retTable')
@@ -101,13 +101,13 @@ Nav.journeyResPage = function(keycode)
 				}
 			}
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			if(KeyHandler.hasView == 'retTable' || KeyHandler.hasView == 'addReturnView')
 			{
 				KeyHandler.changeView('journeyResPage','outTable');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			if(KeyHandler.hasView == 'outTable' && !$('#retTable').hasClass('hidden'))
 			{
 				KeyHandler.changeView('journeyResPage','retTable');
@@ -117,7 +117,7 @@ Nav.journeyResPage = function(keycode)
 				KeyHandler.changeView('journeyResPage','addReturnView');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			if(KeyHandler.hasView == 'addReturnView')
 			{
 				Nav.addReturn($('#addReturn.link'));
@@ -129,20 +129,24 @@ Nav.journeyResPage = function(keycode)
 			}
 			
 			break;
-		case KeyHandler.tvKey.KEY_GREEN:
-			alert('GREEN');
+		case 404:
+			SS.log('GREEN');
 			//Amend journey detail
 			KeyHandler.changeView('journeyPage','journeySearch');
 			break;
-		case KeyHandler.tvKey.KEY_YELLOW:
-			alert('GREEN');
+		case 405:
+			SS.log('GREEN');
 			//Plan new journey
 			$('.link:not(#fromStation)',$('#journeySearch')).removeClass('selected, lastselected, active');
-			$('#fromStation',$('#journeySearch')).attr('code','').addClass('selected');
+			$('#fromStation',$('#journeySearch')).attr('data-code','').addClass('selected');
 			$('#fromStation > input:first',$('#journeySearch')).val('');
+			$('#fromStation').removeClass('clear');
+			$('div.inputClick',$('#fromStation')).html('');
 			
-			$('#toStation',$('#journeySearch')).attr('code','');
+			$('#toStation',$('#journeySearch')).attr('data-code','');
 			$('#toStation > input:first',$('#journeySearch')).val('');
+			$('#toStation').removeClass('clear');
+			$('div.inputClick',$('#toStation')).html('');
 			
 			KeyHandler.changeView('journeyPage','journeySearch');
 			break;
@@ -150,27 +154,27 @@ Nav.journeyResPage = function(keycode)
 			break;
 	}
 }
-Nav.journeyResDetTable = function(keycode)
+Nav.journeyResDetTable = function(key)
 {
-	switch(keycode)
+	switch(key)
 	{
-		case KeyHandler.tvKey.KEY_UP:
+		case 38:
 			if(!Nav.iterateLinks('prev'))
 			{
 				KeyHandler.changeView('journeyResDetPage','header');
 			}
 			break;
-		case KeyHandler.tvKey.KEY_DOWN:
+		case 40:
 			if(!Nav.iterateLinks('next'))
 			{
 				
 			}
 			break;
-		case KeyHandler.tvKey.KEY_LEFT:
+		case 37:
 			break;
-		case KeyHandler.tvKey.KEY_RIGHT:
+		case 39:
 			break;
-		case KeyHandler.tvKey.KEY_ENTER:
+		case 13:
 			selLink = $(Nav.links[Nav.selected]);
 			if(selLink.find('.col6:first').hasClass('CANCELLED'))
 			{
@@ -200,11 +204,11 @@ Nav.journeyResDetTable = function(keycode)
 				{
 					msg += 'Train was delayed';
 				}
-				if(selLink.attr('jsonSrvBul') != '')
+				if(selLink.attr('data-jsonSrvBul') != '')
 				{
-					var o = $.parseJSON(unescape(selLink.attr('jsonSrvBul')));
-					selLink.attr('jsonSrvBul')
-					alert('ENTER+' + unescape(selLink.attr('jsonSrvBul')));
+					var o = $.parseJSON(unescape(selLink.attr('data-jsonSrvBul')));
+					selLink.attr('data-jsonSrvBul')
+					SS.log('ENTER+' + unescape(selLink.attr('data-jsonSrvBul')));
 					msg = o.description;
 				}
 				if(selLink.attr('ungrd') != '')
@@ -250,7 +254,10 @@ Nav.journeyResPageDetail = function()
 	var goToDetail = function()
 	{
 		selLink.attr('obj',escape(JSON.stringify(obj)));
-		var html = Loader.RealtimeJourneyPlanDet(obj,(selLink.attr('jsonSrvBul')!=''?selLink.attr('jsonSrvBul'):null));
+		SS.log('????' + selLink.attr('data-jsonsrvbul'))
+		var jsonsrvbul = '';
+		jsonsrvbul = selLink.attr('data-jsonsrvbul');
+		var html = Loader.RealtimeJourneyPlanDet(obj,(jsonsrvbul!=''?jsonsrvbul:null));
 		$('#journeyResDetTable').html(html);
 		
 		if(KeyHandler.hasView == 'outTable')
@@ -275,7 +282,7 @@ Nav.journeyResPageDetail = function()
 		KeyHandler.blocked = true;
 		//Load full names from codes
 		$.each(obj,function(j,val){
-			alert('aaa::'+j)
+			SS.log('aaa::'+j)
 			Loader.getFullNameForCode(
 				Loader.RealtimeJourneyPlanDetails[ident][i][j].origin,
 				ident,i,j,
@@ -283,7 +290,7 @@ Nav.journeyResPageDetail = function()
 					Loader.RealtimeJourneyPlanDetails[nident][ni][nj].origin = name;
 					countLoaded--;
 					if(countLoaded <= 0) { goToDetail(); KeyHandler.blocked = false; }
-					alert('aaabbb::'+countLoaded)
+					//SS.log('aaabbb::'+countLoaded)
 				}
 			);
 			Loader.getFullNameForCode(
@@ -293,7 +300,7 @@ Nav.journeyResPageDetail = function()
 					Loader.RealtimeJourneyPlanDetails[nident][ni][nj].destination = name;
 					countLoaded--;
 					if(countLoaded <= 0) { goToDetail(); KeyHandler.blocked = false; }
-					alert('aaabbb::'+countLoaded)
+					//SS.log('aaabbb::'+countLoaded)
 				}
 			);
 		});
@@ -305,7 +312,7 @@ Nav.journeyResPageEnter = function()
 	var outDate = Utils.interval15min($('#outTable').data('date') ? $('#outTable').data('date') : $('#outDate').data('date'));
 	var retDate = Utils.interval15min($('#retTable').data('date') ? $('#retTable').data('date') : $('#retDate').data('date'));
 	
-	////alert('outDate' + outDate)
+	////SS.log('outDate' + outDate)
 	
 	if(KeyHandler.hasView == 'lateroutward')
 	{
@@ -327,11 +334,11 @@ Nav.journeyResPageEnter = function()
 		var newDate = retDate.DateSubstract('h',1);
 		retDate = (newDate < new Date() ? retDate : (newDate > (new Date()).DateAdd('d',82) ? retDate : newDate));
 	}
-	var fromGrp = !isNaN(parseInt($('#fromStation').attr('code')));
-	var toGrp = !isNaN(parseInt($('#toStation').attr('code')));
-	NRE.GetRealtimeJourneyPlanRequest($('#fromStation').attr('code'),fromGrp, $('#toStation').attr('code'),toGrp, Utils.GetUTCTimestamp(outDate), $('#fastTrains').hasClass('checked'), function(xmlDoc){
+	var fromGrp = !isNaN(parseInt($('#fromStation').attr('data-code')));
+	var toGrp = !isNaN(parseInt($('#toStation').attr('data-code')));
+	NRE.GetRealtimeJourneyPlanRequest($('#fromStation').attr('data-code'),fromGrp, $('#toStation').attr('data-code'),toGrp, Utils.GetUTCTimestamp(outDate), $('#fastTrains').hasClass('checked'), function(xmlDoc){
 		var list = Loader.RealtimeJourneyPlan(xmlDoc,'out');
-		//alert('out::' + $('ul.error',$('<div>'+list+'</div>')).length + '---' + list);
+		//SS.log('out::' + $('ul.error',$('<div>'+list+'</div>')).length + '---' + list);
 		//Set times
 		
 		if($('ul.error',$('<div>'+list+'</div>')).length <= 0)
@@ -351,11 +358,11 @@ Nav.journeyResPageEnter = function()
 			if($('#addReturn').hasClass('checked'))
 			{
 				//Return
-				var fromGrp = !isNaN(parseInt($('#fromStation').attr('code')));
-				var toGrp = !isNaN(parseInt($('#toStation').attr('code')));
-				NRE.GetRealtimeJourneyPlanRequest($('#toStation').attr('code'),toGrp, $('#fromStation').attr('code'),fromGrp, Utils.GetUTCTimestamp(retDate), $('#fastTrains').hasClass('checked'), function(xmlDoc){
+				var fromGrp = !isNaN(parseInt($('#fromStation').attr('data-code')));
+				var toGrp = !isNaN(parseInt($('#toStation').attr('data-code')));
+				NRE.GetRealtimeJourneyPlanRequest($('#toStation').attr('data-code'),toGrp, $('#fromStation').attr('data-code'),fromGrp, Utils.GetUTCTimestamp(retDate), $('#fastTrains').hasClass('checked'), function(xmlDoc){
 					var list = Loader.RealtimeJourneyPlan(xmlDoc,'ret');
-					//alert('ret::' + $('ul.error',$('<div>'+list+'</div>')).length + '---' + list);
+					//SS.log('ret::' + $('ul.error',$('<div>'+list+'</div>')).length + '---' + list);
 					
 					if($('ul.error',$('<div>'+list+'</div>')).length <= 0)
 					{
