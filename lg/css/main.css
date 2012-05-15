@@ -16,6 +16,9 @@ img#GA{
 #connectionAlert {
 	z-index:99;
 }
+#autoComplete{
+	display:none !important;
+}
 INPUT {
 	border:none !important;
 }

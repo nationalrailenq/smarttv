@@ -7,7 +7,7 @@ Nav.keypad = function(key)
         {
             if(key==75)
             {
-                key = HASH(0x861f120);
+                key = HASH(0x861dea8);
             }
         };
 	switch(key)
@@ -65,7 +65,7 @@ Nav.keypad = function(key)
 		case 39:
 			
 			break;
-                case HASH(0x861f120):
+                case HASH(0x861dea8):
                     if(Nav.tools==0)
                     {
                         Nav.tools = 1;

@@ -6,7 +6,8 @@ var KeyHandler = {
 	hasView		:	null,
 	prevView 	: 	[],
 	hasSubView		:	null,
-	prevSubView 	: 	[]
+	prevSubView 	: 	[],
+	mouseKeypadTimer: null
 }
 KeyHandler.init = function() {
 	
@@ -117,7 +118,7 @@ KeyHandler.initClicksHover = function(_this)
 							return false;
 						}
 					}
-					SS.log('Mouse Over');
+					console.log('Mouse Over, blocked? ' + KeyHandler.blocked);
 					if(!KeyHandler.blocked && !Alert.visible) 
 					{
 						//SS.log($(this).attr('subview') + ' !=' + KeyHandler.hasSubView)
@@ -125,17 +126,18 @@ KeyHandler.initClicksHover = function(_this)
 						{
 							if(KeyHandler.hasSubView == 'keypad')
 							{
-								SS.log('####### Hide on over #########');
+								console.log('####### Hide on over #########');
 								Autocomplete.hide($(Nav.links[Nav.selected]));
+                                                                
 								Utils.Keypad(false);
 								$('#autoComplete').hide();
 							}
-							SS.log('########## 1')
+							console.log('########## 1')
 							KeyHandler.changeView(KeyHandler.hasPage,$(this).attr('view'));
 						}
 						else if($(this).attr('subview') && $(this).attr('subview') != KeyHandler.hasSubView)
 						{
-							SS.log('change to subview');
+							console.log('change to subview');
 							SS.log('########## 2')
 							KeyHandler.changeView(KeyHandler.hasPage,KeyHandler.hasView,$(this).attr('subview'));
 						}
@@ -180,6 +182,18 @@ KeyHandler.initClicksHover = function(_this)
 			}
 		});
 }
+KeyHandler.mouseKeypadCheck = function() {
+	console.log('check time');
+	if( $('#VirtualKeyboard').css('display') == 'none' || $('#VirtualKeyboard').css('visibility') == 'hidden'){
+		//keyboard is gone this cycle
+		KeyHandler.processKey(461);
+		//SS.activeInput = false;
+	} else {
+		//keyboard still up
+		KeyHandler.mouseKeypadTimer = window.setTimeout("KeyHandler.mouseKeypadCheck();", 500);
+	}
+	
+};
 KeyHandler.backHover = function(_this)
 {
     $(_this).find('.link').each(function(i)
@@ -200,6 +214,9 @@ KeyHandler.backHover = function(_this)
 }
 KeyHandler.processClick = function(target,dontClick)
 {
+
+	
+	
 	var m_page = this.hasPage;
 	var m_view = this.hasView;
 	var m_subview = this.hasSubView;
@@ -386,6 +403,7 @@ KeyHandler.block = function(b) {
 
 KeyHandler.processKey = function(key) 
 {
+	window.clearTimeout(KeyHandler.mouseKeypadTimer);
 	try
 	{
 
@@ -400,11 +418,21 @@ KeyHandler.processKey = function(key)
 			Alert.hide();
 			return false;
 		}
+		
 		if(!this.blocked && !Alert.visible) 
 		{
+			console.log('key');
 			Nav.all(keycode);
+			if( $('#VirtualKeyboard').css('display') == 'none' || $('#VirtualKeyboard').css('visibility') == 'hidden'){
+				if (this.hasSubView == 'keypad'){
+					this.hasSubView = null;
+				}
+			} else {
+				this.hasSubView = 'keypad';
+			}
 			if(this.hasSubView)
 			{
+				console.log(this.hasSubView);
 				switch(this.hasSubView){
 					case 'datepad':
 						Nav.datepad(keycode);
@@ -421,6 +449,7 @@ KeyHandler.processKey = function(key)
 			}
 			else
 			{
+				console.log(this.hasView + " or " + this.hasPage);
 				switch((this.hasView ? this.hasView : this.hasPage)){
 					case 'mainButtons':
 						Nav.homePage(keycode);
@@ -478,9 +507,9 @@ KeyHandler.processKey = function(key)
 			}
 		}
 		else {
-			SS.log("blocked key: " + keycode);
+			console.log("blocked key: " + keycode);
 		}
-		SS.log('END Key Pressed :: ' + key + '>' + KeyHandler.keyName(key) + ' Page:: ' + KeyHandler.hasPage + ' View :: ' + KeyHandler.hasView + ' SubView :: ' + KeyHandler.hasSubView + ' SelectedId::' + $(Nav.links[Nav.selected]).attr('id') + ' SelectedSubId::' + $(Nav.sublinks[Nav.subselected]).attr('id'));
+		console.log('END Key Pressed :: ' + key + '>' + KeyHandler.keyName(key) + ' Page:: ' + KeyHandler.hasPage + ' View :: ' + KeyHandler.hasView + ' SubView :: ' + KeyHandler.hasSubView + ' SelectedId::' + $(Nav.links[Nav.selected]).attr('id') + ' SelectedSubId::' + $(Nav.sublinks[Nav.subselected]).attr('id'));
 	}
 	catch(e)
 	{
@@ -578,7 +607,7 @@ KeyHandler.keyName = function(keyCode)
 		case 56: return '56'; break; 
 		case 57: return '57'; break; 
 		case 48: return '48'; break; 
-                case HASH(0x861f120): return 'HASH(0x861f120)';break;
+                case HASH(0x861dea8): return 'HASH(0x861dea8)';break;
 		default:
 			return 'UNKNOWN'; break;
 	}

@@ -296,7 +296,7 @@ Nav.initKeypad = function()
 {
 	if($(this.links[this.selected]).attr('data-rel') == 'Keypad')
 				{
-					SS.log(' ############# Got Keypad')
+					SS.log(' ############# Got Keypad');
 					if($(this.links[this.selected]).data('opened') != true)
 						{
 							Utils.Keypad(true,

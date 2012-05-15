@@ -167,7 +167,7 @@ Nav.journeyPage = function(key)
 					$('#fromStation').attr('data-code','');
 					break;
 				case 'toStation':
-					$('#toStation').attr('data-code')
+					$('#toStation').attr('data-code','')
 					break;
 				default:
 					break;

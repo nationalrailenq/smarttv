@@ -2,8 +2,10 @@ var Utils = {
 	Keypads : [],
 	Datepads : [],
 	dayNames : new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat"),
-	monthNames : [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
-}
+	monthNames : [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ],
+	keyblock:false,
+	timerthing:null
+};
 var charTimer = null;
 var onCharacter = function(){
 	SS.log('onCharacter');
@@ -22,14 +24,18 @@ var onExitEditing = function(){
 };
 Utils.Keypad = function(show,ready,change)
 {
-	SS.log('Utils.Keypad>>' + show + '>>')
+	if(Utils.keyblock == false){
+	console.log('Utils.Keypad>>' + show + '>>');
 	var field = $(Nav.links[Nav.selected]);
 	var fieldId = field.attr('id');
 	var fieldInput = field.children('input:first');
 	var inputClick = fieldInput.prev('div.inputClick');
+        
+       // alert('WE ARE HERE <<<<<<<<<<<')
+        
 	if(show)
 	{
-		SS.log('keypad show')
+		SS.log('keypad show');
 		field.addClass('clear');
 		if(SS.device != 'samsung') fieldInput.removeAttr('disabled').show();
 		if(SS.device != 'samsung') inputClick.hide();
@@ -97,60 +103,62 @@ Utils.Keypad = function(show,ready,change)
 						return false;
 					}
 				});
-				SS.log('Field Focus!!!')
+				SS.log('Field Focus!!!');
 				fieldInput.focus();
 				KeyHandler.blocked = false;
 			},300);
 		}
 		if(SS.device == 'lg')
 		{
-			alert('FOCUS')
+			//alert('FOCUS')
 			fieldInput.focus();
 		}
 		if(SS.device == 'samsung')
 		{
 			IME.showIME(fieldId+'_input',{xPosition:(640*(SS.device == 'samsung' ? 1 : 1.33)),yPosition:(70*(SS.device == 'samsung' ? 1 : 1.33)),clear:true,onReady:ready,lang:'en'});
 		}
-		SS.log('keypad shows')
+		SS.log('keypad shows');
+		KeyHandler.mouseKeypadTimer = window.setTimeout("KeyHandler.mouseKeypadCheck();", 500);
 	}
 	else
 	{
-		//SS.log('keypad hide')
+		
+		console.log('keypad hide');
 		//Close
 		if(!field.data('opened')) return;
 		field.data('opened',false);
 		inputClick.html(fieldInput.val());
 		$(fieldInput,field).unbind('keyup');
-		if(SS.device == 'googletv')
+		console.log('switch for: ' + SS.device);
+		switch(SS.device)
 		{
-			fieldInput.blur();
-			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
-			if(SS.device != 'samsung') inputClick.show();
-		}
-		//$('#hiddenInput').focus();
-		if(SS.device == 'lg')
-		{
-			IME.finEditing(true);
-			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
-			if(SS.device != 'samsung') inputClick.show();
-			fieldInput.blur();
-		}
-		else if(SS.device == 'philips')
-		{
-			
-			$(fieldInput).unbind('blur')
-			fieldInput.blur();
-			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled').hide();
-			if(SS.device != 'samsung') inputClick.show();
-			IME.onEnter();
-		}
-		else
-		{
-			//IME.exitIME();
-			if(SS.device != 'samsung') fieldInput.attr('disabled','disabled')
-			if(SS.device != 'samsung') fieldInput.hide();
-			if(SS.device != 'samsung') inputClick.show();
-		}
+			case 'googletv':
+				fieldInput.blur();
+				fieldInput.attr('disabled','disabled').hide();
+				inputClick.show();
+				break;
+			case 'lg':
+				IME.closeIME();
+				fieldInput.attr('disabled','disabled').hide();
+				inputClick.show();
+				fieldInput.blur();
+				break;
+			case 'philips':
+				$(fieldInput).unbind('blur');
+				fieldInput.blur();
+				fieldInput.attr('disabled','disabled').hide();
+				inputClick.show();
+				IME.onEnter();
+				break;
+			case 'samsung':
+				break;
+			default:
+				fieldInput.attr('disabled','disabled');
+				fieldInput.hide();
+				inputClick.show();
+				break;
+		};
+		console.log('tidy up keypads');
 		
 
 		this.Keypads[fieldId] = false;
@@ -158,12 +166,17 @@ Utils.Keypad = function(show,ready,change)
 		{
 			field.removeClass('clear');
 			field.attr('data-code','');
-		}
-		//Autocomplete.hide($(Nav.links[Nav.selected]),true);
+		};
+		Autocomplete.hide($(Nav.links[Nav.selected]),true);
 		//KeyHandler.viewBack();
-		KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null)
+		//KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null);
+		console.log('leave utils');
+		Utils.keyblock = true;
+		Utils.timerthing = window.setTimeout("Utils.keyblock = false;", 1000);
 	}
-}
+	}
+};
+
 Utils.interval15min = function(date)
 {
 	if(!date) date = new Date();
@@ -177,7 +190,7 @@ Utils.interval15min = function(date)
 	
 	
 	return date;
-}
+};
 Utils.DatePad = function(show,date,onclose,minDate)
 {
 	var field = $(Nav.links[Nav.selected]);
@@ -264,13 +277,13 @@ Utils.DatePad = function(show,date,onclose,minDate)
 			KeyHandler.changeView(KeyHandler.hasPage, KeyHandler.hasView, null);
 		}
 	}
-}
+};
 Utils.format = function(str){
-	for(i = 1; i < arguments.length; i++){
+	for(var i = 1; i < arguments.length; i++){
 		str = str.replace('{' + (i) + '}', arguments[i]);
 	}
 	return str;
-}
+};
 Utils.GetUTCTimestamp = function(date)
 {
 	if(date==null || !date) date = Utils.interval15min(Nav.fixDate(new Date()));
@@ -282,7 +295,7 @@ Utils.GetUTCTimestamp = function(date)
 	'00.000000+00:00';
 	
 //	2012-01-13T10:10:27.6092804+00:00
-}
+};
 Utils.GetTimeDiff = function(date1, date2) {
 	if (date2 == "On time")
 		return date2;
@@ -299,7 +312,7 @@ Utils.GetTimeDiff = function(date1, date2) {
 	}
 
 	return diff;
-}	
+};
 
 Utils.GetTimeLate = function(date1, date2) {
 	if (date2 == "On time")
@@ -314,11 +327,11 @@ Utils.GetTimeLate = function(date1, date2) {
 	dt2 = Utils.stringToDate('2008-09-19 ' + date2 + ':00');
 
 	if (dt1 > dt2) {
-		return false
+		return false;
 	} else {
 		return true;
 	}
-}	
+};
 
 Utils.stringToDate = function(string) {
 		var matches;
@@ -327,7 +340,7 @@ Utils.stringToDate = function(string) {
 		} else {
 			return null;
 		};
-}
+};
 Utils.stringToDateJS = function(string) {
 		var matches;
 		if (matches = string.match(/^(\d{4,4})-(\d{2,2})-(\d{2,2})T(\d{2,2}):(\d{2,2}):(\d{2,2})/)) {
@@ -335,7 +348,7 @@ Utils.stringToDateJS = function(string) {
 		} else {
 			return null;
 		};
-}
+};
 Utils.stringToDateNRE = function(string) {
 		var matches;
 		if (matches = string.match(/^(\d{4,4})-(\d{2,2})-(\d{2,2})T(\d{2,2}):(\d{2,2}):(\d{2,2}).(\d{3,3})/)) {
@@ -343,7 +356,7 @@ Utils.stringToDateNRE = function(string) {
 		} else {
 			return null;
 		};
-}
+};
 Utils.getTimeState = function(date1, date2, late)
 {
 	if (date2 == "On time")
@@ -360,7 +373,7 @@ Utils.getTimeState = function(date1, date2, late)
 		else
 			return 	'<h2>' + date2 + '</h2><h4>' + diff.getMinutes() + ' minutes early</h4>';
 	}
-}
+};
 Utils.getTimeDifference = function(date1, date2)
 {
 	var d = date2.getTime() - date1.getTime();
@@ -379,7 +392,7 @@ Utils.getTimeDifference = function(date1, date2)
     mins =  s.substr(s.length-2);
 	
 	return 	Math.abs(hours)+'h ' +mins+'m';
-}
+};
 Utils.dateWithin = function(beginDate, endDate, checkDate) {
 	var b, e, c;
 	b = Date.parse(beginDate);
@@ -389,15 +402,15 @@ Utils.dateWithin = function(beginDate, endDate, checkDate) {
 		return true;
 	}
 	return false;
-}
+};
 Utils.querystring = function(key) {
 	var re = new RegExp('(?:\\?|&)' + key + '=(.*?)(?=&|$)', 'gi');
 	var r = [], m;
 	while ((m = re.exec(document.location.search)) != null) r.push(m[1]);
 	return r;
-}
+};
 Utils.preloadImages = function(images) {
-	var img = new Image()
+	var img = new Image();
 	$(img).bind('load', function() {
 		if(images[0]) {
 			this.src = images.shift();
@@ -407,17 +420,17 @@ Utils.preloadImages = function(images) {
 };
 String.prototype.removeBreaks = function() {
 	return this.replace(/(\r\n|\n|\r)/gm,"");
-}
+};
 
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");
-}
+};
 String.prototype.ltrim = function() {
 	return this.replace(/^\s+/,"");
-}
+};
 String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
-}
+};
 
 Date.prototype.DateAdd = function(timeU,byMany) {
 	var millisecond=1;
@@ -439,7 +452,7 @@ Date.prototype.DateAdd = function(timeU,byMany) {
 	}
 	
 	return newDate;
-}
+};
 Date.prototype.DateSubstract = function(timeU,byMany) {
 	var millisecond=1;
 	var second=millisecond*1000;
@@ -459,4 +472,4 @@ Date.prototype.DateSubstract = function(timeU,byMany) {
 		case "y": newDate=new Date(dVal-year*byMany); break;
 	}
 	return newDate;
-}
+};

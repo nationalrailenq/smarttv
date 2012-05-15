@@ -73,6 +73,7 @@ Nav.deparrPage = function(key)
 			Nav.iterateLinks('next');
 			break;
 		case 13:
+			console.log('daparrPage: ' + $(this.links[this.selected]).attr('id'));
 			switch($(this.links[this.selected]).attr('id'))
 			{
 				case 'btnLiveArrivals':
@@ -81,7 +82,11 @@ Nav.deparrPage = function(key)
 				case 'btnLiveDepartures':
 					Nav.searchDepartures();
 					break
+				case 'searchStation':
+					
+					break
 				default:
+					console.log('no need to do something');
 					break;
 			}
 			break;

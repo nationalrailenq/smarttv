@@ -2,7 +2,7 @@
 <app_content>
 <app_type>2</app_type>
 <capability>
-<sdk_version>02.00.00</sdk_version>
+<sdk_version>01.05.00</sdk_version>
 <use_internet>Y</use_internet>
 <use_magic>Y</use_magic>
 <use_camera>N</use_camera>

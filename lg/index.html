@@ -11,11 +11,318 @@
         <link rel="stylesheet" type="text/css" href="css/Datepicker.css"/>
         <script type="text/javascript" language="javascript" src="js/tvapp/Datepicker.js"></script>
 		
-        <script type="text/javascript">var SS={deBugReporter:false,language:null,device:"lg",onHover:"",onFocus:"",callbackFunction:null,parse:true,activeInput:false,connectionCheck:true,connectivityTimer:null,online:true};SS.init=function(settings){SS.setLanguage();if(settings){if(settings.debug&&settings.debug==true){SS.debug(true)}if(settings.connectionCheck&&settings.connectionCheck==false){SS.connectionCheck=false}}if(SS.connectionCheck){SS.connectivityTimer=window.setInterval("SS.testConnectivity();",5000)}return};SS.quit=function(){window.NetCastBack()};SS.keyDown=function(){var keycode=event.keyCode;if(SS.activeIME){event.preventDefault();IME.processKey(keycode)}else{Main.keyDown(keycode)}};SS.setHover=function(elID){var prevElement=document.getElementById(SS.onHover);var element=document.getElementById(elID);if(prevElement){if($(prevElement).hasClass("hover")){$(prevElement).removeClass("hover")}}$(element).addClass("hover");SS.onHover=elID;return};SS.offHover=function(elID){var element=document.getElementById(elID);$(element).removeClass("hover");SS.onHover="";return};SS.setFocus=function(elID){if(SS.activeIME){IME.exitEditing(false)}var element=document.getElementById(elID);var prevElement=document.getElementById(SS.onFocus);if(prevElement){if($(prevElement).hasClass("focus")){$(prevElement).removeClass("focus")}}$(element).addClass("focus");$(element).focus();SS.onFocus=elID;return};SS.offFocus=function(elID){var element=document.getElementById(elID);$(element).removeClass("focus");SS.onFocus="";$(element).blur();return};SS.setLanguage=function(lang){var deviceInfo=document.getElementById("deviceInfo");SS.language=deviceInfo.tvLanguage2;return};SS.getLanguage=function(){if(SS.language!=null){return SS.language}else{SS.setLanguage();return null}};SS.checkConnectivity=function(){var deviceInfo=document.getElementById("deviceInfo");return deviceInfo.net_isConnected};SS.testConnectivity=function(){if(SS.online){if(SS.checkConnectivity()){}else{SS.online=false;var popupbox=document.createElement('div');var popuptitle=document.createElement('div');var popuptext=document.createElement('div');popuptext.textContent='Please check your internet connection and re-launch this application';popuptext.style.color='#AAA';popuptext.style.textAlign='center';popuptitle.textContent='No Network Connection';popuptitle.style.color='#EEE';popuptitle.style.textAlign='center';popupbox.style.position='absolute';popupbox.style.backgroundColor='#111';popupbox.style.fontSize='24px';popupbox.style.border='5px solid #EEE';popupbox.style.width='675px';popupbox.style.height='85px';popupbox.style.left='303px';popupbox.style.top='316px';popupbox.style.padding='15px 0px 15px 0px';popupbox.id='connectionAlert';popupbox.appendChild(popuptitle);popupbox.appendChild(popuptext);document.getElementById('body').appendChild(popupbox);if(typeof Main.networkDown=="function"){Main.networkDown()}}}else{if(SS.checkConnectivity()){$('#connectionAlert').remove();SS.online=true;var popupbox=document.createElement('div');var popuptitle=document.createElement('div');var popuptext=document.createElement('div');popuptext.textContent='Your network connection had become disconnected. Some network services may need to be restarted';popuptext.style.color='#AAA';popuptext.style.textAlign='center';popuptitle.textContent='Network Instability';popuptitle.style.color='#EEE';popuptitle.style.textAlign='center';popupbox.style.position='absolute';popupbox.style.backgroundColor='#111';popupbox.style.fontSize='24px';popupbox.style.border='5px solid #EEE';popupbox.style.width='675px';popupbox.style.height='85px';popupbox.style.left='303px';popupbox.style.top='316px';popupbox.style.padding='15px 0px 15px 0px';popupbox.id='connectionAlert';popupbox.appendChild(popuptitle);popupbox.appendChild(popuptext);document.getElementById('body').appendChild(popupbox);var netUp=window.setInterval("$('#connectionAlert').remove();",8000);if(typeof Main.networkUp=="function"){Main.networkUp()}}else{}}};SS.debug=function(state){SS.deBugReporter=state;if(state==true){$("#debugWindow").show()}else{$("#debugWindow").hide()}};SS.log=function(text){if(SS.deBugReporter){$("#debugWindow").prepend("<p>"+text+"</p>")}};SS.putInnerHTML=function(divElement,divContent){divElement.innerHTML=divContent};SS.netUp=function(){};SS.netDown=function(){};SS.getJSONcors=function(partURL,callbackFunc,noParse){var url='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D"'+encodeURIComponent(partURL)+'"&format=json&callback=';SS.callbackFunction=callbackFunc;if(noParse){SS.parse=false}var script=document.createElement('script');script.type='text/javascript';script.src=url+'SS.responseCallback';document.getElementsByTagName('head')[0].appendChild(script)};SS.responseCallback=function(response){var jsonObj;if(SS.parse){jsonObj=JSON.parse(response.query.results.body.p)}else{jsonObj=response.query.results.body.p;SS.parse=true}var callbackFunc=SS.callbackFunction;SS.callbackFunction=null;callbackFunc(jsonObj)};</script>
+        <script type="text/javascript">/**
+         * @platform 	"LG"
+         * @author 		Justin James, 2011
+         * @company 	TV App Agency, London
+         * @contact 	contact@tvappagency.com
+         * 
+         * @last edit	2012/03/13
+         **/
+
+        var SS = {
+        	deBugReporter: false,
+            language:null,
+            device: "lg",
+            onHover: "",
+            onFocus: "",
+            callbackFunction:null,
+        	parse:true,
+        	activeInput:false,
+        	connectionCheck:true,
+        	connectivityTimer:null,
+        	online:true
+        };
+        SS.init = function (settings) {
+        	SS.setLanguage();
+        	var bodytag = document.getElementById("body");
+        	var advert = document.createElement('div');
+        	advert.id = 'SSadvert';
+        	advert.style.width = "1px";
+        	advert.style.height = "1px";
+        	advert.style.position = "absolute";
+        	advert.style.top = "0px";
+        	advert.style.left = "0px";
+        	var banner = document.createElement('img');
+        	banner.id = "SSbanner";
+        	banner.style.width = "1px";
+        	banner.style.height = "1px";
+        	banner.style.display = "hidden";
+        	banner.style.position = "relative";
+        	banner.style.top = "0px";
+        	banner.style.left = "0px";
+        	banner.style.width = "100%";
+        	banner.style.height = "100%";
+        	advert.appendChild(banner);
+        	bodytag.appendChild(advert);
+        	
+        	if (settings){
+            	if(settings.debug && settings.debug == true){
+            		SS.debug(true);
+            	}
+            	if(settings.connectionCheck && settings.connectionCheck == false){
+            		SS.connectionCheck = false;
+            	}
+            }
+        	
+            if(SS.connectionCheck){
+            	SS.connectivityTimer = window.setInterval("SS.testConnectivity();", 5000);
+            }
+        	
+            return
+        };
+        SS.quit = function () {
+        	//window.NetCastExit();
+        	window.NetCastBack(); 
+        };
+        SS.callAd = function(posX, posY, width, height) {
+        	
+        	var advert = document.getElementById('SSadvert');
+        	var banner = document.getElementById('SSbanner');
+        	if(posX){
+        		advert.style.left = posX + 'px';
+        	}
+        	if(posY){
+        		advert.style.top = posY + 'px';
+        	}
+        	if(width){
+        		advert.style.width = width + 'px';
+        	} else if(advert.style.width == '1px'){
+        		advert.style.width = '320px';
+        	}
+        	if(height){
+        		advert.style.height = height + 'px';
+        	} else if(advert.style.height == '1px'){
+        		advert.style.height = '50px';
+        	}
+
+        	var rando = Math.random();
+        	banner.src = "http://adserver.adtech.de/adserv|3.0|25|3769773|0|3055|ADTECH;key=key1+key2+key3+key4;grp=[group]?=" + rando;
+        };
+        SS.keyDown = function () {
+        	var keycode = event.keyCode;
+        	console.log(SS.activeInput);
+        	if( $('#VirtualKeyboard').css('display') == 'none' || $('#VirtualKeyboard').css('visibility') == 'hidden')
+        	{
+        		console.log(keycode);
+        		if(SS.activeInput == true){ //the keypad was up but has just gone
+        			console.log('do something here to release input');
+        			Utils.Keypad(false);
+        		}
+        		SS.activeInput = false;
+        		Main.keyDown(keycode);
+        	} else {
+        		event.preventDefault();
+        		IME.processKey(keycode);
+        	}
+        	
+        	
+//        	if(SS.activeInput){
+//        		
+//        	 } else {
+//        		 Main.keyDown(keycode);
+//        	 }
+
+        };
+        SS.setHover = function (elID){ //for activating hover state on an element
+        	var prevElement = document.getElementById(SS.onHover);
+        	var element = document.getElementById(elID);
+        	if(prevElement){ //if there was a previous element
+        		if($(prevElement).hasClass("hover")){ //with hover.. turn it off, prev hover from remote input
+        			$(prevElement).removeClass("hover");
+        		}
+        	}
+        	$(element).addClass("hover");
+        	SS.onHover = elID;
+        	return;
+        };
+        SS.offHover = function (elID){ //for the onmouseout event
+        	var element = document.getElementById(elID);
+        	$(element).removeClass("hover");
+        	SS.onHover = "";
+        	return;
+        };
+        SS.setFocus = function (elID){
+        	if(SS.activeIME){
+        		IME.exitEditing(false);
+        	}
+        	var element = document.getElementById(elID);
+        	var prevElement = document.getElementById(SS.onFocus);
+        	if(prevElement){ //if there was a previous element
+        		if($(prevElement).hasClass("focus")){ //with hover.. turn it off, prev hover from remote input
+        			$(prevElement).removeClass("focus");
+        		}
+        	}
+        	//$(element).removeClass("hover");
+        	$(element).addClass("focus");
+        	$(element).focus();
+        	//SS.onHover = "";
+        	SS.onFocus = elID;
+        	return;
+        };
+        SS.offFocus = function (elID){
+        	var element = document.getElementById(elID);
+        	//$(element).removeClass("hover");
+        	$(element).removeClass("focus");
+        	//SS.onHover = "";
+        	SS.onFocus = "";
+        	$(element).blur();
+        	return;
+        };
+        SS.setLanguage = function (lang){
+        	var deviceInfo = document.getElementById("deviceInfo"); 
+        	SS.language = deviceInfo.tvLanguage2;
+
+        	return;
+        };
+        SS.getLanguage = function(){
+        	if(SS.language != null){
+        		return SS.language;
+        	} else {
+        		SS.setLanguage();
+        		return null;
+        	}
+        };
+        SS.checkConnectivity = function() {
+        	var deviceInfo = document.getElementById("deviceInfo"); 
+
+        	return deviceInfo.net_isConnected;
+        };
+        SS.testConnectivity = function() {
+        	if(SS.online){
+        		if(SS.checkConnectivity()){
+        	
+        		} else {
+        			SS.online = false;
+        			var popupbox = document.createElement('div');
+        			var popuptitle = document.createElement('div');
+        			var popuptext = document.createElement('div');
+        			
+        			popuptext.textContent = 'Please check your internet connection and re-launch this application';
+        			popuptext.style.color = '#AAA';
+        			popuptext.style.textAlign = 'center';
+        			
+        			popuptitle.textContent = 'No Network Connection';
+        			popuptitle.style.color = '#EEE';
+        			popuptitle.style.textAlign = 'center';
+        			
+        			popupbox.style.position = 'absolute';
+        			popupbox.style.backgroundColor = '#111';
+
+        				popupbox.style.fontSize = '24px';
+        				popupbox.style.border = '5px solid #EEE';
+        				popupbox.style.width = '675px';
+        				popupbox.style.height = '85px';
+        				popupbox.style.left = '303px';
+        				popupbox.style.top = '316px';
+        				popupbox.style.padding = '15px 0px 15px 0px';
+        			
+        			popupbox.id = 'connectionAlert';
+        			
+        			popupbox.appendChild(popuptitle);
+        			popupbox.appendChild(popuptext);
+        			
+        			document.getElementById('body').appendChild(popupbox);		
+        			
+        			if (typeof Main.networkDown=="function"){ //check developer takes key events
+        				Main.networkDown(); //take event keycode to developer code
+        			}
+        		}	
+        	} else {
+        		if(SS.checkConnectivity()){
+        			$('#connectionAlert').remove();
+        			SS.online = true;
+        			var popupbox = document.createElement('div');
+        			var popuptitle = document.createElement('div');
+        			var popuptext = document.createElement('div');
+        			
+        			popuptext.textContent = 'Your network connection had become disconnected. Some network services may need to be restarted';
+        			popuptext.style.color = '#AAA';
+        			popuptext.style.textAlign = 'center';
+        			
+        			popuptitle.textContent = 'Network Instability';
+        			popuptitle.style.color = '#EEE';
+        			popuptitle.style.textAlign = 'center';
+        			
+        			popupbox.style.position = 'absolute';
+        			popupbox.style.backgroundColor = '#111';
+
+        				popupbox.style.fontSize = '24px';
+        				popupbox.style.border = '5px solid #EEE';
+        				popupbox.style.width = '675px';
+        				popupbox.style.height = '85px';
+        				popupbox.style.left = '303px';
+        				popupbox.style.top = '316px';
+        				popupbox.style.padding = '15px 0px 15px 0px';
+
+        			popupbox.id = 'connectionAlert';
+        			
+        			popupbox.appendChild(popuptitle);
+        			popupbox.appendChild(popuptext);
+        			
+        			document.getElementById('body').appendChild(popupbox);	
+        			
+        			var netUp = window.setInterval("$('#connectionAlert').remove();", 8000);
+        			
+        			if (typeof Main.networkUp=="function"){ //check developer takes key events
+        				Main.networkUp(); //take event keycode to developer code
+        			}
+        			
+        		} else {
+        				
+        		}
+        	}
+        };
+        SS.debug = function (state) {
+            SS.deBugReporter = state;
+            if (state == true) {
+                $("#debugWindow").show();
+            } else {
+                $("#debugWindow").hide();
+            }
+        };
+        SS.log = function (text) {
+            if (SS.deBugReporter) {
+                $("#debugWindow").prepend("<p>" + text + "</p>");
+            }
+        };
+        SS.putInnerHTML = function (divElement, divContent) {
+        	divElement.innerHTML = divContent;
+        };
+        SS.netUp = function(){
+        	//here to ensure that a debug call will not error
+        };
+        SS.netDown = function(){
+        	//here to ensure that a debug call will not error
+        };
+        SS.getJSONcors = function (partURL, callbackFunc, noParse){
+        	var url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D"' + encodeURIComponent(partURL) + '"&format=json&callback=';
+        	SS.callbackFunction = callbackFunc;
+        	if(noParse){
+        		SS.parse = false;
+        	}
+        	var script= document.createElement('script');
+        	script.type= 'text/javascript';
+        	script.src= url+'SS.responseCallback';
+        	document.getElementsByTagName('head')[0].appendChild(script);
+        	
+        	
+        };
+        SS.responseCallback = function (response) {
+        	var jsonObj;
+        	if(SS.parse){
+        	jsonObj = JSON.parse(response.query.results.body.p);
+        	} else {
+        		jsonObj = response.query.results.body.p;
+        		SS.parse = true;
+        	}
+        	var callbackFunc = SS.callbackFunction;
+        	SS.callbackFunction = null;
+        	callbackFunc(jsonObj);
+        };</script>
 		<script type="text/javascript">var File={'open':false};File.openStore=function(){File.open=true;return true};File.fromFile=function(name){if(File.open){var nameEQ=name+"=";var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i];while(c.charAt(0)==' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)==0)return c.substring(nameEQ.length,c.length)}}else{SS.log('FILE: file store is not open')}return null};File.toFile=function(name,value){if(File.open){var days=365;var date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));var expires="; expires="+date.toGMTString();document.cookie=name+"="+value+expires+"; path=/"}else{SS.log('FILE: file store is not open')}};File.deleteFile=function(name){if(File.open){var value="";var expires="; expires=Thu, 01-Jan-1970 00:00:01 GMT";document.cookie=name+"="+value+expires+"; path=/"}else{SS.log('FILE: file store is not open')}};File.deleteStore=function(){var cookies=document.cookie.split(";");for(var i=0;i<cookies.length;i++){File.deleteFile(cookies[i].split("=")[0])}File.open=false};</script>
 		<script type="text/javascript">var GoogleAnalytics={GA_ACCOUNT:null,GA_PIXEL:"http://analytics.tvappagency.com/ga.php",GA:null,};GoogleAnalytics.init=function(account,supportURL){GoogleAnalytics.GA=document.createElement('img');GoogleAnalytics.GA.id='GA';GoogleAnalytics.GA.style.position='absolute';GoogleAnalytics.GA.style.left='0px';GoogleAnalytics.GA.style.top='0px';var body=document.getElementById('body');body.appendChild(GoogleAnalytics.GA);GoogleAnalytics.GA_ACCOUNT=account;if(supportURL){GoogleAnalytics.GA_PIXEL=supportURL}SS.log("TVA initialised Google Analytics with account#: "+GoogleAnalytics.GA_ACCOUNT)};GoogleAnalytics.analyticMark=function(action,message){SS.log("TVA logging analytic stage 1 ("+action+" : "+message+")");var url="";url=GoogleAnalytics.GA_PIXEL+"?";url=url+"utmac="+GoogleAnalytics.GA_ACCOUNT;url=url+"&utmn="+Math.floor(Math.random()*2147483647);url=url+"&utmvid"+GoogleAnalytics.getUserID();url=url+"&utmr="+"-";url=url+"&utmp="+"/"+action+"/"+message;url=url+"&guid=ON";url=url+"&utmdebug=true";GoogleAnalytics.GA.src=url;SS.log("TVA logging analytic ("+action+" : "+message+")");return true};GoogleAnalytics.getUserID=function(){var userIdentifier;if(GoogleAnalytics.openStore("GoogAnalytics")){if(GoogleAnalytics.fromFile("gaid")!=null){userIdentifier=GoogleAnalytics.fromFile("gaid")}else{var longNumber=Math.floor(Math.random()*18446744073709552000);var gaid=longNumber.toString(16);GoogleAnalytics.toFile("gaid",gaid);userIdentifier=gaid}}else{SS.log("TVA failed to create unique analytic identifier, using default");userIdentifier="ffffffffffffffff"}return userIdentifier};GoogleAnalytics.openStore=function(){return true};GoogleAnalytics.fromFile=function(name){var nameEQ=name+"=";var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i];while(c.charAt(0)==' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)==0)return c.substring(nameEQ.length,c.length)}return null};GoogleAnalytics.toFile=function(name,value){var days=365;var date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));var expires="; expires="+date.toGMTString();document.cookie=name+"="+value+expires+"; path=/"};GoogleAnalytics.deleteFile=function(name){var value="";var expires="; expires=Thu, 01-Jan-1970 00:00:01 GMT";document.cookie=name+"="+value+expires+"; path=/"};GoogleAnalytics.deleteStore=function(){var cookies=document.cookie.split(";");for(var i=0;i<cookies.length;i++)File.deleteFile(cookies[i].split("=")[0])};</script>
-		<script type="text/javascript">var IME={originalValue:'',keyArray:null,xCoord:0,yCoord:0,letterTimeout:null,voidLetter:false,letterIndex:0,keyIndex:0,activePanel:1,panelLock:false,maxPanel:4,inputBox:null,inputID:null,langLoaded:'en'};IME.pane1={"key1":['.',',','-','/'],"key2":['a','b','c'],"key3":['d','e','f'],"key4":['g','h','i'],"key5":['j','k','l'],"key6":['m','n','o'],"key7":['p','q','r','s'],"key8":['t','u','v'],"key9":['w','x','y','z'],"key0":['space']};IME.pane2={"key1":['.',',','-','/'],"key2":['A','B','C'],"key3":['D','E','F'],"key4":['G','H','I'],"key5":['J','K','L'],"key6":['M','N','O'],"key7":['P','Q','R','S'],"key8":['T','U','V'],"key9":['W','X','Y','Z'],"key0":['space']};IME.pane3={"key1":['1'],"key2":['2'],"key3":['3'],"key4":['4'],"key5":['5'],"key6":['6'],"key7":['7'],"key8":['8'],"key9":['9'],"key0":['0']};IME.pane4={"key1":['+','-','*','/',':'],"key2":['!',';','<'],"key3":['%','[','='],"key4":['(','\\','>'],"key5":[')',']','^'],"key6":['@','_','`'],"key7":['{','|'],"key8":[',','}','~'],"key9":['&','"'],"key0":['#','$','.','?']};IME.buttons={'change':'change','undo':'delete','back':'BACK','enter':'ENTER'};IME.init=function(){return};IME.showIME=function(inputID,options){if(SS.activeInput){IME.exitEditing()}SS.activeInput=true;this.inputBox=document.getElementById(inputID);this.inputID=inputID;IME.originalValue=this.inputBox.value;if(options&&options.xPosition&&options.yPosition){IME.xCoord=options.xPosition;IME.yCoord=options.yPosition}if(options&&options.clear&&options.clear==true){this.inputBox.value=""}if(options&&options.inputType){if(options.inputType=='numeric'){IME.activePanel=3;IME.panelLock=true}else if(options.inputType=='alpha'){IME.activePanel=1;IME.panelLock=true}else{IME.activePanel=1}}else{IME.activePanel=1}if(options&&options.lang){if(options.lang!=IME.langLoaded){try{switch(options.lang){case'en':IME.pane1=IME_en.pad[0];IME.pane2=IME_en.pad[1];IME.pane3=IME_en.pad[2];IME.pane4=IME_en.pad[3];IME.buttons=IME_en.pad[4];break;case'es':IME.pane1=IME_es.pad[0];IME.pane2=IME_es.pad[1];IME.pane3=IME_es.pad[2];IME.pane4=IME_es.pad[3];IME.buttons=IME_es.pad[4];break;case'fr':IME.pane1=IME_fr.pad[0];IME.pane2=IME_fr.pad[1];IME.pane3=IME_fr.pad[2];IME.pane4=IME_fr.pad[3];IME.buttons=IME_fr.pad[4];break;case'de':IME.pane1=IME_de.pad[0];IME.pane2=IME_de.pad[1];IME.pane3=IME_de.pad[2];IME.pane4=IME_de.pad[3];IME.buttons=IME_de.pad[4];break;default:IME.pane1=IME_en.pad[0];IME.pane2=IME_en.pad[1];IME.pane3=IME_en.pad[2];IME.pane4=IME_en.pad[3];IME.buttons=IME_en.pad[4];break}IME.langLoaded=options.lang}catch(err){SS.log('Input-EXTRA was not included. Defaulting to English input')}}}IME.draw(IME.activePanel)};IME.setPosition=function(xPos,yPos){IME.draw(IME.activePanel,xPos,yPos)};IME.onChar=function(){if(typeof onCharacter=="function"){onCharacter(this.inputBox.value)}};IME.draw=function(pane,xPos,yPos){var bodyEl=document.getElementById('body');var keypadEl=document.getElementById('TVAkeypad');if(keypadEl){bodyEl.removeChild(keypadEl)}IME.newChar();IME.activePanel=pane;var keys;var keyshow;var buttons=[];if(xPos){IME.xCoord=xPos}if(yPos){IME.yCoord=yPos}switch(pane){case 1:keys=IME.pane1;break;case 2:keys=IME.pane2;break;case 3:keys=IME.pane3;break;case 4:keys=IME.pane4;break;default:keys=IME.pane1;break}var keypad=document.createElement('div');keypad.className="TVAkeypad";keypad.id="TVAkeypad";keypad.style.top=IME.yCoord+"px";keypad.style.left=IME.xCoord+"px";buttons[0]=document.createElement('a');buttons[0].textContent=IME.getKeyString(keys.key0);buttons[1]=document.createElement('a');buttons[1].textContent=IME.getKeyString(keys.key1);buttons[2]=document.createElement('a');buttons[2].textContent=IME.getKeyString(keys.key2);buttons[3]=document.createElement('a');buttons[3].textContent=IME.getKeyString(keys.key3);buttons[4]=document.createElement('a');buttons[4].textContent=IME.getKeyString(keys.key4);buttons[5]=document.createElement('a');buttons[5].textContent=IME.getKeyString(keys.key5);buttons[6]=document.createElement('a');buttons[6].textContent=IME.getKeyString(keys.key6);buttons[7]=document.createElement('a');buttons[7].textContent=IME.getKeyString(keys.key7);buttons[8]=document.createElement('a');buttons[8].textContent=IME.getKeyString(keys.key8);buttons[9]=document.createElement('a');buttons[9].textContent=IME.getKeyString(keys.key9);buttons[10]=document.createElement('a');buttons[10].innerHTML='&nbsp;<div id="redChangeButton">&nbsp;</div><div id="redChangeText">'+IME.buttons.change+'</div>';buttons[11]=document.createElement('a');buttons[11].innerHTML='&nbsp;<div id="leftDeleteButton"><-</div><div id="leftDeleteText">'+IME.buttons.undo+'</div>';buttons[12]=document.createElement('a');buttons[12].innerHTML=IME.buttons.back;buttons[13]=document.createElement('a');buttons[13].innerHTML=IME.buttons.enter;for(var i=0;i<10;i++){buttons[i].className="TVAkeypadButton";buttons[i].id="TVAkeypad"+i;buttons[i].onclick=function(){IME.keyClick(this.id)}}for(var i=1;i<10;i++){keypad.appendChild(buttons[i])}if(IME.panelLock==true&&pane==3){buttons[10].innerHTML='&nbsp;'}buttons[10].className="TVAkeypadButtonX";buttons[10].id="TVAkeypad"+10;buttons[10].onclick=function(){IME.keyClick(this.id)};keypad.appendChild(buttons[10]);keypad.appendChild(buttons[0]);buttons[11].className="TVAkeypadButtonX";buttons[11].id="TVAkeypad"+11;buttons[11].onclick=function(){IME.keyClick(this.id)};keypad.appendChild(buttons[11]);buttons[12].className="TVAkeypadButtonY";buttons[12].id="TVAkeypad"+12;buttons[12].onclick=function(){IME.keyClick(this.id)};keypad.appendChild(buttons[12]);buttons[13].className="TVAkeypadButtonY";buttons[13].id="TVAkeypad"+13;buttons[13].onclick=function(){IME.keyClick(this.id)};keypad.appendChild(buttons[13]);IME.keyArray=keys;document.getElementById('body').appendChild(keypad);var element=document.getElementById(IME.inputID);var prevElement=document.getElementById(SS.onFocus);if(prevElement){if($(prevElement).hasClass("focus")){$(prevElement).removeClass("focus")}}$(element).addClass("focus");$(element).focus();SS.onFocus=IME.inputID};IME.getKeyString=function(keyarray){var keystring="";for(var i=0;i<keyarray.length;i++){keystring=keystring+keyarray[i]}return keystring};IME.isActive=function(){return SS.activeInput};IME.keyClick=function(keyID){switch(keyID){case'TVAkeypad1':IME.processKey(49);break;case'TVAkeypad2':IME.processKey(50);break;case'TVAkeypad3':IME.processKey(51);break;case'TVAkeypad4':IME.processKey(52);break;case'TVAkeypad5':IME.processKey(53);break;case'TVAkeypad6':IME.processKey(54);break;case'TVAkeypad7':IME.processKey(55);break;case'TVAkeypad8':IME.processKey(56);break;case'TVAkeypad9':IME.processKey(57);break;case'TVAkeypad0':IME.processKey(48);break;case'TVAkeypad10':IME.processKey(403);break;case'TVAkeypad11':IME.processKey(37);break;case'TVAkeypad12':IME.processKey(461);break;case'TVAkeypad13':IME.processKey(13);break}};IME.changePanel=function(changeTo){var panelTo;if(IME.panelLock==false){if(changeTo){panelTo=changeTo}else{if(IME.activePanel==IME.maxPanel){panelTo=1;IME.activePanel=1}else{panelTo=IME.activePanel+1;IME.activePanel=IME.activePanel+1}}IME.draw(panelTo)}else{if(IME.activePanel==1||IME.activePanel==2){if(IME.activePanel==1){panelTo=2;IME.activePanel=2}else{panelTo=1;IME.activePanel=1}IME.draw(panelTo)}}};IME.processKey=function(keycode){IME.voidLetter=true;if(IME.letterTimeout){window.clearTimeout(IME.letterTimeout)}var sendKey=null;var sendLetter="";switch(keycode){case 49:sendKey=IME.keyArray.key1;if(IME.keyIndex==1){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=1;IME.letterIndex=0}break;case 50:sendKey=IME.keyArray.key2;if(IME.keyIndex==2){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=2;IME.letterIndex=0}break;case 51:sendKey=IME.keyArray.key3;if(IME.keyIndex==3){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=3;IME.letterIndex=0}break;case 52:sendKey=IME.keyArray.key4;if(IME.keyIndex==4){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=4;IME.letterIndex=0}break;case 53:sendKey=IME.keyArray.key5;if(IME.keyIndex==5){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=5;IME.letterIndex=0}break;case 54:sendKey=IME.keyArray.key6;if(IME.keyIndex==6){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=6;IME.letterIndex=0}break;case 55:sendKey=IME.keyArray.key7;if(IME.keyIndex==7){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=7;IME.letterIndex=0}break;case 56:sendKey=IME.keyArray.key8;if(IME.keyIndex==8){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=8;IME.letterIndex=0}break;case 57:sendKey=IME.keyArray.key9;if(IME.keyIndex==9){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=9;IME.letterIndex=0}break;case 48:sendKey=IME.keyArray.key0;if(IME.keyIndex==0){if(IME.letterIndex==sendKey.length-1){IME.letterIndex=0}else{IME.letterIndex=IME.letterIndex+1}}else{IME.newChar();IME.keyIndex=0;IME.letterIndex=0}break;case 39:sendKey=[''];IME.letterIndex=0;IME.newChar();break;case 37:sendKey=[''];IME.letterIndex=0;IME.delChar();break;case 13:IME.finEditing(true);break;case 461:IME.exitEditing(true);break;case 403:IME.changePanel();break}if(keycode==48||keycode==49||keycode==50||keycode==51||keycode==52||keycode==53||keycode==54||keycode==55||keycode==56||keycode==57||keycode==37||keycode==39){sendLetter=sendKey[IME.letterIndex];IME.addChar(sendLetter);IME.letterTimeout=window.setTimeout("IME.newChar();",1000)}Main.keyDown(keycode)};IME.newChar=function(){if(IME.letterTimeout){window.clearTimeout(IME.letterTimeout)}IME.voidLetter=false;IME.keyIndex=-1};IME.delChar=function(){var curString=IME.inputBox.value;IME.inputBox.value=curString.slice(0,-1);IME.newChar()};IME.addChar=function(character){if(character==='space'){character=' '}var curString=IME.inputBox.value;var newString="";if(IME.voidLetter){newString=curString.slice(0,-1)+character}else{newString=curString+character}IME.inputBox.value=newString;IME.onChar()};IME.finEditing=function(keyTap){IME.panelLock=false;if(IME.letterTimeout){window.clearTimeout(IME.letterTimeout)}IME.voidLetter=false;IME.keyIndex=-1;if(keyTap){SS.offFocus(IME.inputID);SS.setHover(IME.inputID)}$('#TVAkeypad').remove();SS.activeInput=false;if(typeof onFinishedEditing=="function"){onFinishedEditing(this.inputBox.value)}};IME.closeIME=function(){IME.panelLock=false;if(IME.letterTimeout){window.clearTimeout(IME.letterTimeout)}IME.voidLetter=false;IME.keyIndex=-1;$(IME.inputID).removeClass("focus");$(IME.inputID).blur();$('#TVAkeypad').remove();SS.activeInput=false;if(typeof onFinishedEditing=="function"){onFinishedEditing(this.inputBox.value)}};IME.exitEditing=function(keyTap){IME.panelLock=false;if(IME.letterTimeout){window.clearTimeout(IME.letterTimeout)}IME.voidLetter=false;IME.keyIndex=-1;this.inputBox.value=IME.originalValue;if(keyTap){SS.offFocus(IME.inputID);SS.setHover(IME.inputID)}else{$(IME.inputID).removeClass("focus");$(IME.inputID).blur()}$('#TVAkeypad').remove();SS.activeInput=false;if(typeof onExitEditing=="function"){onExitEditing()}};</script>
-	<style type=text/css media=screen>div.TVAkeypad{-khtml-user-select:none;padding: 3px, 0px, 0px, 3px;z-index:9900;background-color:#eee;width:312px;position:absolute;}a.TVAkeypadButton{font-size:26px;font-family: sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;padding:25px 0px 25px 0px;margin:3px 0px 0px 3px;letter-spacing:3px;color:#222;}a.TVAkeypadButton:hover, a.TVAkeypadButton.hover{background-color:#ddffdd;}a.TVAkeypadButton:focus, a.TVAkeypadButton.focus{background-color:#66cc66;color:#eee;}a.TVAkeypadButtonX{font-size:26px;font-family: sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;padding:25px 0px 25px 0px;margin:3px 0px 0px 3px;letter-spacing:3px;color:#222;position:relative;}a.TVAkeypadButtonX:hover, a.TVAkeypadButtonX.hover{background-color:#ddffdd;}a.TVAkeypadButtonX:focus, a.TVAkeypadButtonX.focus{background-color:#66cc66;color:#eee;}div#redChangeButton{background-color:#E00;width:30px;max-height:16px;display:inline-block;text-align:center;position:absolute;top:25px;left:35px;}div#redChangeText{font-size:20px;color:#222;width:100px;display:inline-block;text-align:center;position:absolute;top:50px;left:0px;letter-spacing:0px;}div#leftDeleteButton{width:30px;display:inline-block;text-align:center;position:absolute;top:20px;left:35px;font-size:20px;letter-spacing:-3px;}div#leftDeleteText{font-size:20px;color:#222;width:100px;display:inline-block;text-align:center;position:absolute;top:50px;left:0px;letter-spacing:0px;}a.TVAkeypadButtonY{font-size:26px;font-family: sans-serif;background-color:#fff;width:100px;display:inline-block;text-align:center;padding:6px 0px 6px 0px;margin:3px 0px 0px 3px;letter-spacing:0px;color:#222;position:relative;}a.TVAkeypadButtonY:hover, a.TVAkeypadButtonY.hover{background-color:#ddffdd;}a.TVAkeypadButtonY:focus, a.TVAkeypadButtonY.focus{background-color:#66cc66;color:#eee;}a#TVAkeypad13{width:203px;}</style>	
+		<link type="text/css" rel="Stylesheet" href="./jsLgVKeyboard/LgVKeyboard.css" /><script id="mainVKScript" type="text/javascript" src="./jsLgVKeyboard/LgVKeyboard.js"></script><script type="text/javascript">var IME={originalValue:'',inputBox:null,inputID:null,};IME.init=function(){return};IME.setPosition=function(){return};IME.showIME=function(inputID,options){SS.activeInput=true;this.inputBox=document.getElementById(inputID);this.inputID=inputID;IME.originalValue=this.inputBox.value;if(options&&options.clear&&options.clear==true){this.inputBox.value=""}$(IME.inputBox).addClass("focus");$(IME.inputBox).focus();SS.onFocus=IME.inputID};IME.isActive=function(){return SS.activeInput};IME.clear=function(){this.inputBox.value=""};IME.input=function(inString){this.inputBox.value=inString};IME.processKey=function(keycode){switch(keycode){case 461:IME.exitIME(true);break;default:break}};IME.closeIME=function(){$(IME.inputID).removeClass("focus");SS.activeInput=false;if(typeof onFinishedEditing=="function"){onFinishedEditing(IME.inputBox.value)}};IME.exitIME=function(keyTap){this.inputBox.value=IME.originalValue;if(keyTap){SS.offFocus(IME.inputID);SS.setHover(IME.inputID)}else{$(IME.inputID).removeClass("focus");$(IME.inputID).blur()};SS.activeInput=false;if(typeof onExitEditing=="function"){onExitEditing()}};lgKb.onKeyDown=IME.processKey;</script>
 
         <link rel="stylesheet" type="text/css" href="css/Main.css"/>
        
@@ -84,7 +391,7 @@
 			<div class="btn-C btn-arrivalsPage link"><h3>Departures</h3></div>
 			<!--<div class="btn-D btn-journeyResPage"><h3>Save journey</h3></div>-->
             
-            <div class="btn-exit btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage btn-stationChooserPage btn-journeyResDetPage link"><h3>Close</h3></div>
+            <div id="btn-exit" class="btn-exit btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage btn-stationChooserPage btn-journeyResDetPage link"><h3>Close</h3></div>
             <div class="btn-back btn-homePage btn-journeyResPage btn-journeyPage btn-deparrPage btn-arrivalsPage btn-departurePage btn-departureDetPage btn-stationChooserPage btn-journeyResDetPage link"><h3>Back</h3></div>
 		</div>
         <!-- END Page Header -->
@@ -221,6 +528,149 @@
             	<div class="search_pane sml">
                     <table class="jsTable1" cellpadding="0" cellspacing="0">
                     <tr><td align="center" valign="middle">
+                    <table class="jsTable2" cellpadding="2" cellspacing="0" >
+                        <tr>
+                        	<td align="left"><h2>From</h2></td>
+                            <td align="left"><h2>To</h2></td>
+                            <td class="jsDate"><h2>Date</h2></td>
+                            <td class="jsTime"><h2>Time</h2></td>
+                            <td class="jsReturnDate"><h2>Return date</h2></td>
+                            <td class="jsReturnTime"><h2>Time</h2></td>
+                        </tr>
+                        <tr>
+                        	<td align="left" valign="middle"><h1></h1></td>
+                            <td align="left" valign="middle"><h1></h1></td>
+                            <td align="left" valign="middle"><h1></h1></td>
+                            <td align="left" valign="middle"><h1></h1></td>
+                            <td align="left" valign="middle"><h1></h1></td>
+                            <td align="left" valign="middle"><h1></h1></td>
+                        </tr>
+                    </table>
+                    </td></tr></table>
+                </div>
+                <div class="detHeader2"><h2>Outward journey</h2></div>
+                <div class="grid resDet">
+                    <div class="gridheader">
+						<ul>
+							<li class="col1"><h2>By</h2></li>
+							<li class="col2"><h2>Leaving</h2></li>
+							<li class="col3"><h2>From</h2></li>
+							<li class="col4"><h2>To</h2></li>
+                            <li class="col5"><h2>Arriving</h2></li>
+							<li class="col6"><h2>Duration</h2></li>
+						</ul>
+					</div>
+                    <div id="journeyResDetTable" class="gridTable scroolable view"></div>
+                    <!--<div id="departureDetTable" class="gridTable"></div>-->
+                </div>				
+			</div> 
+		</div>
+        <!-- END Journey Result Detail Content -->
+        <!-- Departure Arrivals Content -->
+        <div id="deparrPage" class="page">
+        	<div class="content">
+                <div id="deparrSearch" class="search_pane sml view">
+		<table border="0" cellpadding="0" cellspacing="0" class="departTable">
+                        <tr>
+                            <td class="departStation"><h1>Find a station</h1></td>
+                            <td><div id="searchStation" class="input link"><div class="inputClick"></div><input style="display:none !important;" type="text" disabled="disabled"/></div></td>
+                            <td ><div id="btnLiveDepartures" class="goButtonSml link"><h1>Live departures</h1></div></td>
+                            <td ><div id="btnLiveArrivals" class="goButtonSml link"><h1>Live arrivals</h1></div></td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="recentDepArr" class="recent_pane view">
+                	<div class="deparrHeader"><h1>Recent stations</h1></div>
+                </div>
+			</div>
+		</div>
+		<!-- END Departure Arrivals Content -->
+        <!-- Arrivals Content -->
+        <div id="arrivalsPage" class="page">
+        	<div class="content">
+                <div class="detHeader">
+                    <h1></h1>
+                </div>
+                <div class="grid">
+                    <div class="gridheader">
+						<ul>
+							<li class="col1"><h2>Due</h2></li>
+							<li class="col2"><h2>Origin</h2></li>
+							<li class="col3"><h2>Status</h2></li>
+							<li class="col4"><h2>Platform</h2></li>
+						</ul>
+					</div>
+                    <div id="arrivalTable" class="gridTable scroolable view"></div>
+                </div>
+			</div>        
+        </div>
+        <!-- END Arrivals Content -->
+        <!-- Departure Content -->
+        <div id="departurePage" class="page">
+        	<div class="content">
+                <div class="detHeader">
+                    <h1></h1>
+                </div>
+                <div class="grid">
+                    <div class="gridheader">
+						<ul>
+							<li class="col1"><h2>Due</h2></li>
+							<li class="col2"><h2>Destination</h2></li>
+							<li class="col3"><h2>Status</h2></li>
+							<li class="col4"><h2>Platform</h2></li>
+						</ul>
+					</div>
+                    <div id="departureTable" class="gridTable scroolable view"></div>
+                </div>				
+			</div>        
+        </div>
+        <!-- END Departure Content -->
+		<!-- Departure Detail Content -->
+		<div id="departureDetPage" class="page">
+        	<div class="content">
+                <div class="detHeader">
+                    <h1></h1>
+                </div>
+                <div class="grid depDetail">
+                    <div class="gridheader">
+						<ul>
+							<li class="col1"><h2>Departs</h2></li>
+							<li class="col2"><h2>Station</h2></li>
+							<li class="col3"><h2>Status</h2></li>
+							<li class="col4"><h2>Platform</h2></li>
+						</ul>
+					</div>
+                    <div id="departureDetTable" class="gridTable scroolable view"></div>
+                </div>				
+			</div> 
+		</div>
+        <!-- END Departure Detail Content -->
+        <!-- Station Chooser Content -->
+		<div id="stationChooserPage" class="page">		
+        	<div class="content">
+                <div class="detHeader">
+                    <h1>From station</h1>
+                </div>
+                <div class="stationChooserTitle">
+                	<h2>Sorry we couldn't find "<strong id="disambiguationCode" style="text-transform:uppercase;"></strong>".<br/> Did you mean?</h2>
+                </div>
+                <div class="grid stChDetail">
+                    <div class="gridheader">
+						<ul>
+                            <li class="col1"><h2>Station</h2></li>
+						</ul>
+					</div>
+                    <div id="stChTable" class="gridTable scroolable view"></div>
+                </div>				
+			</div>
+		</div>
+		<!-- END Station Chooser Content -->
+		<div id="autoCompleteX" class="autoComplete subview"></div>
+
+
+        <div id="debugWindow" style="position: absolute; top: 10px; right: 10px; width: 200px; height: 700px; overflow:hidden; color: lime; font-size: 14px; line-height: 16px; background-color: none; border: none; z-index: 3000; display: none;"></div></body>
+</html>
+middle">
                     <table class="jsTable2" cellpadding="2" cellspacing="0" >
                         <tr>
                         	<td align="left"><h2>From</h2></td>

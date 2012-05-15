@@ -101,6 +101,7 @@ Nav.homePage = function(key)
 			}
 			break;
 		default:
+			console.log('no key for homepge');
 			break;
 	}
 }
